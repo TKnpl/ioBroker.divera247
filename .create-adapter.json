@@ -1,0 +1,38 @@
+{
+	"cli": true,
+	"adapterName": "divera247",
+	"title": "Divera 24/7",
+	"description": "Adapter zur Alarmierungssoftware Divera 24/7",
+	"keywords": [
+		"divera",
+		"alarm"
+	],
+	"expert": "yes",
+	"features": [
+		"adapter"
+	],
+	"adminFeatures": [],
+	"type": "alarm",
+	"startMode": "daemon",
+	"connectionType": "cloud",
+	"dataSource": "poll",
+	"connectionIndicator": "yes",
+	"language": "JavaScript",
+	"adminReact": "no",
+	"tools": [
+		"ESLint",
+		"type checking"
+	],
+	"indentation": "Tab",
+	"quotes": "single",
+	"es6class": "yes",
+	"authorName": "tknpl",
+	"authorGithub": "TKnpl",
+	"authorEmail": "thorbenknueppel@icloud.com",
+	"gitRemoteProtocol": "HTTPS",
+	"gitCommit": "no",
+	"license": "MIT License",
+	"ci": "gh-actions",
+	"dependabot": "no",
+	"creatorVersion": "1.31.0"
+}

@@ -1,0 +1,75 @@
+{
+	"common": {
+		"name": "divera247",
+		"version": "0.0.1",
+		"news": {
+			"0.0.1": {
+				"en": "initial release",
+				"de": "Erstveröffentlichung"
+			}
+		},
+		"title": "Divera 24/7",
+		"titleLang": {
+			"en": "Divera 24/7",
+			"de": "Divera 24/7"
+		},
+		"desc": {
+			"en": "Adapter for the alerting software Divera 24/7",
+			"de": "Adapter zur Alarmierungssoftware Divera 24/7"
+		},
+		"authors": [
+			"tknpl <thorbenknueppel@icloud.com>"
+		],
+		"keywords": [
+			"divera",
+			"alarm"
+		],
+		"license": "MIT",
+		"platform": "Javascript/Node.js",
+		"main": "main.js",
+		"icon": "divera247.png",
+		"enabled": true,
+		"extIcon": "https://raw.githubusercontent.com/TKnpl/ioBroker.divera247/master/admin/divera247.png",
+		"readme": "https://github.com/TKnpl/ioBroker.divera247/blob/master/README.md",
+		"loglevel": "info",
+		"mode": "daemon",
+		"type": "alarm",
+		"compact": true,
+		"connectionType": "cloud",
+		"dataSource": "poll",
+		"materialize": true,
+		"dependencies": [
+			{
+				"js-controller": ">=2.0.0"
+			}
+		]
+	},
+	"native": {
+		"option1": true,
+		"option2": "42"
+	},
+	"objects": [],
+	"instanceObjects": [
+		{
+			"_id": "info",
+			"type": "channel",
+			"common": {
+				"name": "Information"
+			},
+			"native": {}
+		},
+		{
+			"_id": "info.connection",
+			"type": "state",
+			"common": {
+				"role": "indicator.connected",
+				"name": "Device or service connected",
+				"type": "boolean",
+				"read": true,
+				"write": false,
+				"def": false
+			},
+			"native": {}
+		}
+	]
+}
