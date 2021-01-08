@@ -28,7 +28,7 @@ Wählen Sie ein Aktualisierungsintervall. 30 Sekunden werden empfohlen. Das Mini
 ## Changelog
 
 ### 0.0.1
-* (tknpl) initial release
+* (tknpl) initial commit
 
 ## License
 MIT License
