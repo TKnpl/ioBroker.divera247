@@ -28,12 +28,12 @@ Wählen Sie ein Aktualisierungsintervall. 30 Sekunden werden empfohlen. Das Mini
 ## Changelog
 
 ### 0.0.1
-* (tknpl) initial commit
+* (TKnpl) initial commit
 
 ## License
 MIT License
 
-Copyright (c) 2021 tknpl <thorbenknueppel@icloud.com>
+Copyright (c) 2021 TKnpl <dev@t-concepts.de>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

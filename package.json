@@ -4,7 +4,7 @@
   "description": "Adapter zur Alarmierungssoftware Divera 24/7",
   "author": {
     "name": "tknpl",
-    "email": "thorbenknueppel@icloud.com"
+    "email": "dev@t-concepts.de"
   },
   "homepage": "https://github.com/TKnpl/ioBroker.divera247",
   "license": "MIT",
