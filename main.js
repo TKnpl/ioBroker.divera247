@@ -24,7 +24,7 @@ class Divera247 extends utils.Adapter {
 		if (pollIntervallSeconds >= pollIntervallSecondsMinimum) {
 			// Initial call of the main function for this adapter
 			this.getDataFromApiAndSetObjects(diveraAccessKey);
-			
+
 			// Registration of an interval calling the main function for this adapter
 			let repeatingFunctionCall = setInterval(() => {
 				this.getDataFromApiAndSetObjects(diveraAccessKey);
@@ -44,12 +44,12 @@ class Divera247 extends utils.Adapter {
 			callback();
 		}
 	}
-	
+
 	/**
 	* Main function for this adapter
 	* It calls the api of the alerting-server and sets the relevant states
 	*/
-	getDataFromApiAndSetObjects(diveraAccessKey) {		
+	getDataFromApiAndSetObjects(diveraAccessKey) {
 		// Calling the alerting-server api
 		axios({
 			method: 'get',
@@ -59,9 +59,9 @@ class Divera247 extends utils.Adapter {
 		}).then(
 			function(response) {
 				const content = response.data;
-				
+
 				this.log.debug('Received data from Divera-API (' + response.status + '): ' + JSON.stringify(content));
-				
+
 				// Set adapter connected true
 				this.setState('info.connection', true, true);
 
@@ -78,7 +78,7 @@ class Divera247 extends utils.Adapter {
 		            native: {},
 		        });
 				this.setState('alarm', {val: content.success, ack: true});
-				
+
 				// Setting or refreshing the Object 'lastUpdate' -> current timestamp
 				this.setObjectNotExistsAsync('lastUpdate', {
 		            type: 'state',
@@ -97,8 +97,13 @@ class Divera247 extends utils.Adapter {
 			function (error) {
             	if (error.response) {
                     // The request was made and the server responded with a error status code
-                    this.log.warn('received error ' + error.response.status + ' response with content: ' + JSON.stringify(error.response.data));
-					this.setState('info.connection', false, true);
+                    if (error.response.status == 403) {
+	                    this.log.error('Access-Token is invalid. Please use a valid token!');
+						this.setState('info.connection', false, true);
+                    } else {
+	                    this.log.warn('received error ' + error.response.status + ' response with content: ' + JSON.stringify(error.response.data));
+						this.setState('info.connection', false, true);
+                    }
                 } else if (error.request) {
                     // The request was made but no response was received
                     this.log.error(error.message);
@@ -109,7 +114,7 @@ class Divera247 extends utils.Adapter {
 					this.setState('info.connection', false, true);
                 }
             }.bind(this)
-        );
+        )
 	}
 }
 
