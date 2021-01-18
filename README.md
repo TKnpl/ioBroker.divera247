@@ -27,6 +27,9 @@ Furthermore please chose an updating interval for calling the API server. 30 sec
 
 ## Changelog
 
+### 0.0.2
+* (TKnpl) adjusted translation
+
 ### 0.0.1
 * (TKnpl) initial commit
 
