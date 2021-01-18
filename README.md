@@ -30,6 +30,9 @@ Furthermore please chose an updating interval for calling the API server. 30 sec
 ### 0.0.1
 * (TKnpl) initial commit
 
+## What's next
+* Adding more data points for informations in case of an active alert
+
 ## License
 MIT License
 
