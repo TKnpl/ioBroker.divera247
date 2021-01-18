@@ -14,16 +14,16 @@
 
 ## divera247 adapter for ioBroker
 
-Adapter zur Alarmierungssoftware Divera 24/7
+Adapter for the alerting service "Divera 24/7"
 
-## Voraussetzungen
-* Ihre Einrichtung / Organisation muss mindestens über die Divera 24 / 7 Lizenz "Alarm" verfügen
+## Requirements
+Your organisation has to subscribe the "Alarm" license of Divera 24/7 services in minimum
 
-## Einrichtung
-Zur Einrichtung benötigen Sie Ihren persönlichen Access-Token von Divera 24/7.
-Den Token können Sie nach Anmeldung auf der [Divera 24 / 7 Webseite](https://www.divera247.com/) unter Verwaltung -> API einsehen.
-Kopieren Sie den Token und fügen Sie ihn in den Divera 24/7 Adapter Einstellungen ein.
-Wählen Sie ein Aktualisierungsintervall. 30 Sekunden werden empfohlen. Das Minimum liegt bei 10 Sekunden.
+## Configuartion of this adapter
+You have to enter your personal "Divera 24/7" access token to this adapter.
+To find out the token, go to the official [Divera 24 / 7 webseite](https://www.divera247.com/) and navigate to administration -> settings -> interfaces -> API. Here you can find the token in the "authorisation" area.
+Copy the token and paste it in the admin page of this adapter.
+Furthermore please chose an updating interval for calling the API server. 30 seconds are recommended. The minimum is 10 seconds.
 
 ## Changelog
 

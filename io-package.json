@@ -20,6 +20,10 @@
 		"authors": [
 			"tknpl <dev@t-concepts.de>"
 		],
+		"author": {
+			"name": "TKnpl",
+			"email": "dev@t-concepts.de"
+		},
 		"keywords": [
 			"divera",
 			"alarm"
