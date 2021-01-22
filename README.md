@@ -27,6 +27,9 @@ Furthermore please chose an updating interval for calling the API server. 30 sec
 
 ## Changelog
 
+### 0.0.3
+* (TKnpl) added title, text, address, latitude, longitude, general formatting
+
 ### 0.0.2
 * (TKnpl) adjusted translation
 
