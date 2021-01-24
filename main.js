@@ -22,47 +22,8 @@ class Divera247 extends utils.Adapter {
 		const pollIntervallSecondsMinimum = 10;
 
 		if (pollIntervallSeconds >= pollIntervallSecondsMinimum) {
-			// Initial call of the main function for this adapter
-			this.getDataFromApiAndSetObjects(diveraAccessKey);
-
-			// Registration of an interval calling the main function for this adapter
-			let repeatingFunctionCall = setInterval(() => {
-				this.getDataFromApiAndSetObjects(diveraAccessKey);
-			}, pollIntervallMilliseconds);
-		} else {
-			this.log.error('The update interval must be at least ' + pollIntervallSecondsMinimum + ' seconds!');
-			this.setState('info.connection', false, true);
-		}
-	}
-
-	// Is called when adapter shuts down
-	onUnload(callback) {
-		try {
-			clearInterval(repeatingFunctionCall);
-			callback();
-		} catch (e) {
-			callback();
-		}
-	}
-
-	/**
-	* Main function for this adapter
-	* It calls the api of the alerting-server and sets the relevant states
-	*/
-	getDataFromApiAndSetObjects(diveraAccessKey) {
-		// Calling the alerting-server api
-		axios({
-			method: 'get',
-			baseURL: 'https://www.divera247.com/',
-			url: '/api/last-alarm?accesskey=' + diveraAccessKey,
-			responseType: 'json'
-		}).then(
-			function (response) {
-				const content = response.data;
-
-				this.log.debug('Received data from Divera-API (' + response.status + '): ' + JSON.stringify(content));
-
-				// Set adapter connected true
+			if (() => {this.checkConnectionToApi(diveraAccessKey)}) {
+				// Connected to API
 				this.setState('info.connection', true, true);
 
 				// Creating the Object 'alarm' -> response JSON key 'success'
@@ -143,6 +104,19 @@ class Divera247 extends utils.Adapter {
 					native: {},
 				});
 
+				// Creating the Object 'date' -> response JSON key 'data.date'
+				this.setObjectNotExistsAsync('date', {
+					type: 'state',
+					common: {
+						name: 'Alarmierungszeit',
+						type: 'number',
+						role: 'date',
+						read: true,
+						write: false
+					},
+					native: {},
+				});
+
 				// Creating the Object 'lastUpdate' -> current timestamp
 				this.setObjectNotExistsAsync('lastUpdate', {
 					type: 'state',
@@ -156,6 +130,88 @@ class Divera247 extends utils.Adapter {
 					native: {},
 				});
 
+				// Initial call of the main function for this adapter
+				this.getDataFromApiAndSetObjects(diveraAccessKey);
+
+				// Registration of an interval calling the main function for this adapter
+				let repeatingFunctionCall = setInterval(() => {
+					this.getDataFromApiAndSetObjects(diveraAccessKey);
+				}, pollIntervallMilliseconds);
+			} else {
+				this.setState('info.connection', false, true);
+			}
+		} else {
+			this.log.error('The update interval must be at least ' + pollIntervallSecondsMinimum + ' seconds!');
+			this.setState('info.connection', false, true);
+		}
+	}
+
+	// Is called when adapter shuts down
+	onUnload(callback) {
+		try {
+			clearInterval(repeatingFunctionCall);
+			callback();
+		} catch (e) {
+			callback();
+		}
+	}
+
+	checkConnectionToApi(diveraAccessKey) {
+		// Calling the alerting-server api
+		axios({
+			method: 'get',
+			baseURL: 'https://www.divera247.com/',
+			url: '/api/last-alarm?accesskey=' + diveraAccessKey,
+			responseType: 'json'
+		}).then(
+			function (response) {
+				if (response.data.status == 200) {
+					return true;
+				} else {
+					return false;
+				}
+			}.bind(this)
+		).catch(
+			function (error) {
+				if (error.response) {
+					// The request was made and the server responded with a error status code
+					if (error.response.status == 403) {
+						this.log.error('Access-Token is invalid. Please use a valid token!');
+						return false;
+					} else {
+						this.log.warn('received error ' + error.response.status + ' response with content: ' + JSON.stringify(error.response.data));
+						return false;
+					}
+				} else if (error.request) {
+					// The request was made but no response was received
+					this.log.error(error.message);
+					return false;
+				} else {
+					// Something happened in setting up the request that triggered an Error
+					this.log.error(error.message);
+					return false;
+				}
+			}.bind(this)
+		)
+	}
+
+	/**
+	* Main function for this adapter
+	* It calls the api of the alerting-server and sets the relevant states
+	*/
+	getDataFromApiAndSetObjects(diveraAccessKey) {
+		// Calling the alerting-server api
+		axios({
+			method: 'get',
+			baseURL: 'https://www.divera247.com/',
+			url: '/api/last-alarm?accesskey=' + diveraAccessKey,
+			responseType: 'json'
+		}).then(
+			function (response) {
+				const content = response.data;
+
+				this.log.debug('Received data from Divera-API (' + response.status + '): ' + JSON.stringify(content));
+
 				// Setting the states
 				this.setState('alarm', { val: content.success, ack: true });
 				this.setState('lastUpdate', { val: Date.now(), ack: true });
@@ -166,12 +222,14 @@ class Divera247 extends utils.Adapter {
 					this.setState('address', { val: content.data.address, ack: true });
 					this.setState('lat', { val: content.data.lat, ack: true });
 					this.setState('lng', { val: content.data.lng, ack: true });
+					this.setState('date', { val: content.data.date * 1000, ack: true });
 				} else {
 					this.setState('title', { val: null, ack: true });
 					this.setState('text', { val: null, ack: true });
 					this.setState('address', { val: null, ack: true });
 					this.setState('lat', { val: null, ack: true });
 					this.setState('lng', { val: null, ack: true });
+					this.setState('date', { val: null, ack: true });
 				}
 			}.bind(this)
 		).catch(
