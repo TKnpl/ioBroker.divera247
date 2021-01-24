@@ -27,6 +27,9 @@ Furthermore please chose an updating interval for calling the API server. 30 sec
 
 ## Changelog
 
+### 0.0.4
+* (TKnpl) Connection check to api improved, added timestamp of latest alert
+
 ### 0.0.3
 * (TKnpl) added title, text, address, latitude, longitude, general formatting
 
