@@ -3,6 +3,14 @@
 		"name": "divera247",
 		"version": "0.0.4",
 		"news": {
+			"0.0.4": {
+				"en": "Connection check to api improved, added timestamp of latest alert",
+				"de": "API-Verbindungs-Check verbesserunt, Alarmieringszeitstempel hinzugefügt"
+			},
+			"0.0.3": {
+				"en": "added title, text, address, latitude, longitude, general formatting",
+				"de": "Einsatzstichwort, Meldungstext, Adresse, Längengrad und Breitengrad hinzugefügt"
+			},
 			"0.0.2": {
 				"en": "adjusted translation",
 				"de": "Übersetzung verbessert"
