@@ -17,7 +17,7 @@
 Adapter for the alerting service "Divera 24/7"
 
 ## Requirements
-Your organisation has to subscribe the "Alarm" license of Divera 24/7 services in minimum
+Your organisation has to subscribe the "Alarm" plan of Divera 24/7 services for full usability of this adapter
 
 ## Configuartion of this adapter
 You have to enter your personal "Divera 24/7" access token to this adapter.
