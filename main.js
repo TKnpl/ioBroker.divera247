@@ -22,7 +22,7 @@ class Divera247 extends utils.Adapter {
 		const pollIntervallSecondsMinimum = 10;
 
 		if (pollIntervallSeconds >= pollIntervallSecondsMinimum) {
-			if (() => {this.checkConnectionToApi(diveraAccessKey)}) {
+			if (() => { this.checkConnectionToApi(diveraAccessKey) }) {
 				// Connected to API
 				this.setState('info.connection', true, true);
 
@@ -146,16 +146,10 @@ class Divera247 extends utils.Adapter {
 		}
 	}
 
-	// Is called when adapter shuts down
-	onUnload(callback) {
-		try {
-			clearInterval(repeatingFunctionCall);
-			callback();
-		} catch (e) {
-			callback();
-		}
-	}
-
+	/*
+	*	Function to check the connection to the API
+	*	returns true / false
+	*/
 	checkConnectionToApi(diveraAccessKey) {
 		// Calling the alerting-server api
 		axios({
@@ -166,8 +160,10 @@ class Divera247 extends utils.Adapter {
 		}).then(
 			function (response) {
 				if (response.data.status == 200) {
+					this.log.debug('Connection to API succeeded');
 					return true;
 				} else {
+					this.log.warn('Connection to API was not successful. Please check API-Key and try again');
 					return false;
 				}
 			}.bind(this)
@@ -195,9 +191,8 @@ class Divera247 extends utils.Adapter {
 		)
 	}
 
-	/**
-	* Main function for this adapter
-	* It calls the api of the alerting-server and sets the relevant states
+	/*
+	*	Function that calls the API and set the Object States
 	*/
 	getDataFromApiAndSetObjects(diveraAccessKey) {
 		// Calling the alerting-server api
@@ -254,6 +249,16 @@ class Divera247 extends utils.Adapter {
 				}
 			}.bind(this)
 		)
+	}
+
+	// Is called when adapter shuts down
+	onUnload(callback) {
+		try {
+			clearInterval(repeatingFunctionCall);
+			callback();
+		} catch (e) {
+			callback();
+		}
 	}
 }
 
