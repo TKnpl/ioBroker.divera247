@@ -28,6 +28,9 @@ Furthermore please chose an updating interval for calling the API server. 30 sec
 ## Changelog
 
 ### 0.0.5
+* (TKnpl) state handling while active alarm and connection check improved, fixed object types
+
+### 0.0.5
 * (TKnpl) fixed io-package news issue
 
 ### 0.0.4

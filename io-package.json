@@ -1,8 +1,12 @@
 {
 	"common": {
 		"name": "divera247",
-		"version": "0.0.5",
+		"version": "0.0.6",
 		"news": {
+			"0.0.6": {
+				"en": "state handling while active alarm and connection check improved, fixed object types",
+				"de": "state handling bei aktivem Alarm und connection check verbessert, Fehler bei Objekttypen behoben"
+			},
 			"0.0.5": {
 				"en": "fixed io-package news issue",
 				"de": "io-package news Anforderungen nachgepflegt"
