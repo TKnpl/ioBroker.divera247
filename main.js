@@ -23,6 +23,8 @@ class Divera247 extends utils.Adapter {
 		const pollIntervallMilliseconds = pollIntervallSeconds * 1000;
 		const pollIntervallSecondsMinimum = 10;
 
+		this.setState('info.connection', false, true);
+
 		if (diveraAccessKey && pollIntervallSeconds) {
 			if (pollIntervallSeconds >= pollIntervallSecondsMinimum) {
 				if (this.checkConnectionToApi(diveraAccessKey)) {
@@ -145,12 +147,9 @@ class Divera247 extends utils.Adapter {
 					let repeatingFunctionCall = setInterval(() => {
 						this.getDataFromApiAndSetObjects(diveraAccessKey);
 					}, pollIntervallMilliseconds);
-				} else {
-					this.setState('info.connection', false, true);
 				}
 			} else {
 				this.log.error('The update interval must be at least ' + pollIntervallSecondsMinimum + ' seconds!');
-				this.setState('info.connection', false, true);
 			}
 		}
 	}
@@ -170,9 +169,9 @@ class Divera247 extends utils.Adapter {
 			function (response) {
 				if (response.data.status == 200) {
 					this.log.debug('Connection to API succeeded');
-					connected = true;
+					return true;
 				} else {
-					this.log.warn('Connection to API was not successful. Please check API-Key and try again');
+					this.log.warn('Connection to API failed. Please check your API-Key and try again');
 					return false;
 				}
 			}.bind(this)
