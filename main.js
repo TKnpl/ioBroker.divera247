@@ -27,7 +27,7 @@ class Divera247 extends utils.Adapter {
 
 		if (diveraAccessKey && pollIntervallSeconds) {
 			if (pollIntervallSeconds >= pollIntervallSecondsMinimum) {
-				if (this.checkConnectionToApi(diveraAccessKey)) {
+				if (await this.checkConnectionToApi(diveraAccessKey)) {
 					// Connected to API
 					this.setState('info.connection', true, true);
 
@@ -234,7 +234,7 @@ class Divera247 extends utils.Adapter {
 				if (error.response) {
 					// The request was made and the server responded with a error status code
 					if (error.response.status == 403) {
-						this.log.error('Access-Token is invalid. Please use a valid token!');
+						this.log.error('Access-Token has been invalid. Please use a valid token!');
 						this.setState('info.connection', false, true);
 					} else {
 						this.log.warn('received error ' + error.response.status + ' response with content: ' + JSON.stringify(error.response.data));
