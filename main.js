@@ -167,7 +167,7 @@ class Divera247 extends utils.Adapter {
 			responseType: 'json'
 		}).then(
 			function (response) {
-				if (response.data.status == 200) {
+				if (response.status == 200) {
 					this.log.debug('Connection to API succeeded');
 					return true;
 				} else {
