@@ -141,9 +141,6 @@ class Divera247 extends utils.Adapter {
 					this.setState('lng', { val: null, ack: true });
 					this.setState('date', { val: null, ack: true });
 
-					// Initial call of the main function for this adapter
-					this.getDataFromApiAndSetObjects(diveraAccessKey);
-
 					// Registration of an interval calling the main function for this adapter
 					let repeatingFunctionCall = setInterval(() => {
 						this.getDataFromApiAndSetObjects(diveraAccessKey);
@@ -184,7 +181,7 @@ class Divera247 extends utils.Adapter {
 				if (error.response) {
 					// The request was made and the server responded with a error status code
 					if (error.response.status == 403) {
-						this.log.error('Access-Token is invalid. Please use a valid token!');
+						this.log.error('Access-Token invalid. Please use a valid token!');
 						return false;
 					} else {
 						this.log.warn('received error ' + error.response.status + ' response with content: ' + JSON.stringify(error.response.data));
