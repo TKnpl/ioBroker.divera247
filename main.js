@@ -4,6 +4,8 @@ const utils = require('@iobroker/adapter-core');
 const axios = require('axios');
 const adapterName = require('./package.json').name.split('.').pop();
 
+let lastAlarmId = null;
+
 class Divera247 extends utils.Adapter {
 
 	constructor(options) {
@@ -22,7 +24,7 @@ class Divera247 extends utils.Adapter {
 		const pollIntervallSecondsMinimum = 10;
 
 		if (pollIntervallSeconds >= pollIntervallSecondsMinimum) {
-			if (() => { this.checkConnectionToApi(diveraAccessKey) }) {
+			if (this.checkConnectionToApi(diveraAccessKey)) {
 				// Connected to API
 				this.setState('info.connection', true, true);
 
@@ -130,6 +132,14 @@ class Divera247 extends utils.Adapter {
 					native: {},
 				});
 
+				// Initialisation of the states
+				this.setState('title', { val: null, ack: true });
+				this.setState('text', { val: null, ack: true });
+				this.setState('address', { val: null, ack: true });
+				this.setState('lat', { val: null, ack: true });
+				this.setState('lng', { val: null, ack: true });
+				this.setState('date', { val: null, ack: true });
+
 				// Initial call of the main function for this adapter
 				this.getDataFromApiAndSetObjects(diveraAccessKey);
 
@@ -152,7 +162,7 @@ class Divera247 extends utils.Adapter {
 	*/
 	checkConnectionToApi(diveraAccessKey) {
 		// Calling the alerting-server api
-		axios({
+		return axios({
 			method: 'get',
 			baseURL: 'https://www.divera247.com/',
 			url: '/api/last-alarm?accesskey=' + diveraAccessKey,
@@ -161,7 +171,7 @@ class Divera247 extends utils.Adapter {
 			function (response) {
 				if (response.data.status == 200) {
 					this.log.debug('Connection to API succeeded');
-					return true;
+					connected = true;
 				} else {
 					this.log.warn('Connection to API was not successful. Please check API-Key and try again');
 					return false;
@@ -210,21 +220,15 @@ class Divera247 extends utils.Adapter {
 				// Setting the states
 				this.setState('alarm', { val: content.success, ack: true });
 				this.setState('lastUpdate', { val: Date.now(), ack: true });
-				// Setting the states according to alarm true / false
-				if (content.success) {
+				// Setting the alarm specific states when a alarm is active and the alarm id is different to the last id
+				if (content.success && lastAlarmId != content.data.id) {
+					lastAlarmId = content.data.id;
 					this.setState('title', { val: content.data.title, ack: true });
 					this.setState('text', { val: content.data.text, ack: true });
 					this.setState('address', { val: content.data.address, ack: true });
 					this.setState('lat', { val: content.data.lat, ack: true });
 					this.setState('lng', { val: content.data.lng, ack: true });
 					this.setState('date', { val: content.data.date * 1000, ack: true });
-				} else {
-					this.setState('title', { val: null, ack: true });
-					this.setState('text', { val: null, ack: true });
-					this.setState('address', { val: null, ack: true });
-					this.setState('lat', { val: null, ack: true });
-					this.setState('lng', { val: null, ack: true });
-					this.setState('date', { val: null, ack: true });
 				}
 			}.bind(this)
 		).catch(
