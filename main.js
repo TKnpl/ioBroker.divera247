@@ -44,7 +44,7 @@ class Divera247 extends utils.Adapter {
 					type: 'state',
 					common: {
 						name: 'Einsatzstichwort',
-						type: 'text',
+						type: 'string',
 						role: 'text',
 						read: true,
 						write: false
@@ -57,7 +57,7 @@ class Divera247 extends utils.Adapter {
 					type: 'state',
 					common: {
 						name: 'Meldungstext',
-						type: 'text',
+						type: 'string',
 						role: 'text',
 						read: true,
 						write: false
@@ -70,7 +70,7 @@ class Divera247 extends utils.Adapter {
 					type: 'state',
 					common: {
 						name: 'Adresse',
-						type: 'text',
+						type: 'string',
 						role: 'text',
 						read: true,
 						write: false
@@ -83,7 +83,7 @@ class Divera247 extends utils.Adapter {
 					type: 'state',
 					common: {
 						name: 'Längengrad',
-						type: 'text',
+						type: 'number',
 						role: 'text',
 						read: true,
 						write: false
@@ -96,7 +96,7 @@ class Divera247 extends utils.Adapter {
 					type: 'state',
 					common: {
 						name: 'Breitengrad',
-						type: 'text',
+						type: 'number',
 						role: 'text',
 						read: true,
 						write: false
