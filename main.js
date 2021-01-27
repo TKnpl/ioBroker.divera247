@@ -23,136 +23,138 @@ class Divera247 extends utils.Adapter {
 		const pollIntervallMilliseconds = pollIntervallSeconds * 1000;
 		const pollIntervallSecondsMinimum = 10;
 
-		if (pollIntervallSeconds >= pollIntervallSecondsMinimum) {
-			if (this.checkConnectionToApi(diveraAccessKey)) {
-				// Connected to API
-				this.setState('info.connection', true, true);
+		if (diveraAccessKey && pollIntervallSeconds) {
+			if (pollIntervallSeconds >= pollIntervallSecondsMinimum) {
+				if (this.checkConnectionToApi(diveraAccessKey)) {
+					// Connected to API
+					this.setState('info.connection', true, true);
 
-				// Creating the Object 'alarm' -> response JSON key 'success'
-				this.setObjectNotExistsAsync('alarm', {
-					type: 'state',
-					common: {
-						name: 'Alarm',
-						type: 'boolean',
-						role: 'indicator',
-						read: true,
-						write: false
-					},
-					native: {},
-				});
+					// Creating the Object 'alarm' -> response JSON key 'success'
+					this.setObjectNotExistsAsync('alarm', {
+						type: 'state',
+						common: {
+							name: 'Alarm',
+							type: 'boolean',
+							role: 'indicator',
+							read: true,
+							write: false
+						},
+						native: {},
+					});
 
-				// Creating the Object 'title' -> response JSON key 'data.title'
-				this.setObjectNotExistsAsync('title', {
-					type: 'state',
-					common: {
-						name: 'Einsatzstichwort',
-						type: 'string',
-						role: 'text',
-						read: true,
-						write: false
-					},
-					native: {},
-				});
+					// Creating the Object 'title' -> response JSON key 'data.title'
+					this.setObjectNotExistsAsync('title', {
+						type: 'state',
+						common: {
+							name: 'Einsatzstichwort',
+							type: 'string',
+							role: 'text',
+							read: true,
+							write: false
+						},
+						native: {},
+					});
 
-				// Creating the Object 'title' -> response JSON key 'data.title'
-				this.setObjectNotExistsAsync('text', {
-					type: 'state',
-					common: {
-						name: 'Meldungstext',
-						type: 'string',
-						role: 'text',
-						read: true,
-						write: false
-					},
-					native: {},
-				});
+					// Creating the Object 'title' -> response JSON key 'data.title'
+					this.setObjectNotExistsAsync('text', {
+						type: 'state',
+						common: {
+							name: 'Meldungstext',
+							type: 'string',
+							role: 'text',
+							read: true,
+							write: false
+						},
+						native: {},
+					});
 
-				// Creating the Object 'address' -> response JSON key 'data.address'
-				this.setObjectNotExistsAsync('address', {
-					type: 'state',
-					common: {
-						name: 'Adresse',
-						type: 'string',
-						role: 'text',
-						read: true,
-						write: false
-					},
-					native: {},
-				});
+					// Creating the Object 'address' -> response JSON key 'data.address'
+					this.setObjectNotExistsAsync('address', {
+						type: 'state',
+						common: {
+							name: 'Adresse',
+							type: 'string',
+							role: 'text',
+							read: true,
+							write: false
+						},
+						native: {},
+					});
 
-				// Creating the Object 'lat' -> response JSON key 'data.lat'
-				this.setObjectNotExistsAsync('lat', {
-					type: 'state',
-					common: {
-						name: 'Längengrad',
-						type: 'number',
-						role: 'text',
-						read: true,
-						write: false
-					},
-					native: {},
-				});
+					// Creating the Object 'lat' -> response JSON key 'data.lat'
+					this.setObjectNotExistsAsync('lat', {
+						type: 'state',
+						common: {
+							name: 'Längengrad',
+							type: 'number',
+							role: 'text',
+							read: true,
+							write: false
+						},
+						native: {},
+					});
 
-				// Creating the Object 'lng' -> response JSON key 'data.lng'
-				this.setObjectNotExistsAsync('lng', {
-					type: 'state',
-					common: {
-						name: 'Breitengrad',
-						type: 'number',
-						role: 'text',
-						read: true,
-						write: false
-					},
-					native: {},
-				});
+					// Creating the Object 'lng' -> response JSON key 'data.lng'
+					this.setObjectNotExistsAsync('lng', {
+						type: 'state',
+						common: {
+							name: 'Breitengrad',
+							type: 'number',
+							role: 'text',
+							read: true,
+							write: false
+						},
+						native: {},
+					});
 
-				// Creating the Object 'date' -> response JSON key 'data.date'
-				this.setObjectNotExistsAsync('date', {
-					type: 'state',
-					common: {
-						name: 'Alarmierungszeit',
-						type: 'number',
-						role: 'date',
-						read: true,
-						write: false
-					},
-					native: {},
-				});
+					// Creating the Object 'date' -> response JSON key 'data.date'
+					this.setObjectNotExistsAsync('date', {
+						type: 'state',
+						common: {
+							name: 'Alarmierungszeit',
+							type: 'number',
+							role: 'date',
+							read: true,
+							write: false
+						},
+						native: {},
+					});
 
-				// Creating the Object 'lastUpdate' -> current timestamp
-				this.setObjectNotExistsAsync('lastUpdate', {
-					type: 'state',
-					common: {
-						name: 'Letzte Aktualisierung',
-						type: 'number',
-						role: 'value.time',
-						read: true,
-						write: false
-					},
-					native: {},
-				});
+					// Creating the Object 'lastUpdate' -> current timestamp
+					this.setObjectNotExistsAsync('lastUpdate', {
+						type: 'state',
+						common: {
+							name: 'Letzte Aktualisierung',
+							type: 'number',
+							role: 'value.time',
+							read: true,
+							write: false
+						},
+						native: {},
+					});
 
-				// Initialisation of the states
-				this.setState('title', { val: null, ack: true });
-				this.setState('text', { val: null, ack: true });
-				this.setState('address', { val: null, ack: true });
-				this.setState('lat', { val: null, ack: true });
-				this.setState('lng', { val: null, ack: true });
-				this.setState('date', { val: null, ack: true });
+					// Initialisation of the states
+					this.setState('title', { val: null, ack: true });
+					this.setState('text', { val: null, ack: true });
+					this.setState('address', { val: null, ack: true });
+					this.setState('lat', { val: null, ack: true });
+					this.setState('lng', { val: null, ack: true });
+					this.setState('date', { val: null, ack: true });
 
-				// Initial call of the main function for this adapter
-				this.getDataFromApiAndSetObjects(diveraAccessKey);
-
-				// Registration of an interval calling the main function for this adapter
-				let repeatingFunctionCall = setInterval(() => {
+					// Initial call of the main function for this adapter
 					this.getDataFromApiAndSetObjects(diveraAccessKey);
-				}, pollIntervallMilliseconds);
+
+					// Registration of an interval calling the main function for this adapter
+					let repeatingFunctionCall = setInterval(() => {
+						this.getDataFromApiAndSetObjects(diveraAccessKey);
+					}, pollIntervallMilliseconds);
+				} else {
+					this.setState('info.connection', false, true);
+				}
 			} else {
+				this.log.error('The update interval must be at least ' + pollIntervallSecondsMinimum + ' seconds!');
 				this.setState('info.connection', false, true);
 			}
-		} else {
-			this.log.error('The update interval must be at least ' + pollIntervallSecondsMinimum + ' seconds!');
-			this.setState('info.connection', false, true);
 		}
 	}
 
