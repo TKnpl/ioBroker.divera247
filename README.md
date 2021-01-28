@@ -27,6 +27,9 @@ Furthermore please chose an updating interval for calling the API server. 30 sec
 
 ## Changelog
 
+### 0.0.7
+* (TKnpl) added object 'priority' and 'alarm' object updates only in case of an new alarm or when an alarm was closed
+
 ### 0.0.6
 * (TKnpl) state handling while active alarm and connection check improved, fixed object types
 

@@ -5,6 +5,7 @@ const axios = require('axios');
 const adapterName = require('./package.json').name.split('.').pop();
 
 let lastAlarmId = null;
+let lastAlarmStatus = false;
 
 class Divera247 extends utils.Adapter {
 
@@ -122,6 +123,19 @@ class Divera247 extends utils.Adapter {
 						native: {},
 					});
 
+					// Creating the Object 'priority' -> response JSON key 'data.priority'
+					this.setObjectNotExistsAsync('priority', {
+						type: 'state',
+						common: {
+							name: 'Priorität/Sonderrechte',
+							type: 'boolean',
+							role: 'indicator',
+							read: true,
+							write: false
+						},
+						native: {},
+					});
+
 					// Creating the Object 'lastUpdate' -> current timestamp
 					this.setObjectNotExistsAsync('lastUpdate', {
 						type: 'state',
@@ -136,12 +150,15 @@ class Divera247 extends utils.Adapter {
 					});
 
 					// Initialisation of the states
+					this.setState('alarm', { val: false, ack: true });
 					this.setState('title', { val: null, ack: true });
 					this.setState('text', { val: null, ack: true });
 					this.setState('address', { val: null, ack: true });
 					this.setState('lat', { val: null, ack: true });
 					this.setState('lng', { val: null, ack: true });
 					this.setState('date', { val: null, ack: true });
+					this.setState('priority', { val: null, ack: true });
+					this.setState('lastUpdate', { val: null, ack: true });
 
 					// Registration of an interval calling the main function for this adapter
 					let repeatingFunctionCall = setInterval(() => {
@@ -215,18 +232,24 @@ class Divera247 extends utils.Adapter {
 
 				this.log.debug('Received data from Divera-API (' + response.status + '): ' + JSON.stringify(content));
 
-				// Setting the states
-				this.setState('alarm', { val: content.success, ack: true });
+				// Setting the update state
 				this.setState('lastUpdate', { val: Date.now(), ack: true });
-				// Setting the alarm specific states when a alarm is active and the alarm id is different to the last id
+				
+				// Setting the alarm specific states when a new alarm is active
 				if (content.success && lastAlarmId != content.data.id) {
 					lastAlarmId = content.data.id;
+					lastAlarmStatus = content.success;
+					this.setState('alarm', { val: content.success, ack: true });
 					this.setState('title', { val: content.data.title, ack: true });
 					this.setState('text', { val: content.data.text, ack: true });
 					this.setState('address', { val: content.data.address, ack: true });
 					this.setState('lat', { val: content.data.lat, ack: true });
 					this.setState('lng', { val: content.data.lng, ack: true });
 					this.setState('date', { val: content.data.date * 1000, ack: true });
+					this.setState('priority', { val: content.data.priority, ack: true });
+				} else if (content.success != lastAlarmStatus) {
+					lastAlarmStatus = content.success;
+					this.setState('alarm', { val: content.success, ack: true });
 				}
 			}.bind(this)
 		).catch(

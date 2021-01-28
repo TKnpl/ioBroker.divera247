@@ -1,6 +1,6 @@
 {
   "name": "iobroker.divera247",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "Adapter zur Alarmierungssoftware Divera 24/7",
   "author": {
     "name": "tknpl",
