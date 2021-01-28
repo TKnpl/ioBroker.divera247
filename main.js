@@ -136,6 +136,19 @@ class Divera247 extends utils.Adapter {
 						native: {},
 					});
 
+					// Creating the Object 'group' -> response JSON key 'data.group'
+					this.setObjectNotExistsAsync('group', {
+						type: 'state',
+						common: {
+							name: 'Gruppe',
+							type: 'string',
+							role: 'text',
+							read: true,
+							write: false
+						},
+						native: {},
+					});
+
 					// Creating the Object 'lastUpdate' -> current timestamp
 					this.setObjectNotExistsAsync('lastUpdate', {
 						type: 'state',
@@ -158,6 +171,7 @@ class Divera247 extends utils.Adapter {
 					this.setState('lng', { val: null, ack: true });
 					this.setState('date', { val: null, ack: true });
 					this.setState('priority', { val: null, ack: true });
+					this.setState('group', { val: null, ack: true });
 					this.setState('lastUpdate', { val: null, ack: true });
 
 					// Registration of an interval calling the main function for this adapter
@@ -247,6 +261,7 @@ class Divera247 extends utils.Adapter {
 					this.setState('lng', { val: content.data.lng, ack: true });
 					this.setState('date', { val: content.data.date * 1000, ack: true });
 					this.setState('priority', { val: content.data.priority, ack: true });
+					this.setState('group', { val: content.data.group, ack: true });
 				} else if (content.success != lastAlarmStatus) {
 					lastAlarmStatus = content.success;
 					this.setState('alarm', { val: content.success, ack: true });
