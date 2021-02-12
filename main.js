@@ -33,162 +33,180 @@ class Divera247 extends utils.Adapter {
 					if (await this.checkConnectionToApi(diveraAccessKey)) {
 						// Connected to API
 						this.setState('info.connection', true, true);
-	
-						// Creating the Object 'alarm' -> response JSON key 'success'
-						this.setObjectNotExistsAsync('alarm', {
-							type: 'state',
-							common: {
-								name: 'Alarm',
-								type: 'boolean',
-								role: 'indicator',
-								read: true,
-								write: false
-							},
-							native: {},
-						});
-	
-						// Creating the Object 'title' -> response JSON key 'data.title'
-						this.setObjectNotExistsAsync('title', {
-							type: 'state',
-							common: {
-								name: 'Einsatzstichwort',
-								type: 'string',
-								role: 'text',
-								read: true,
-								write: false
-							},
-							native: {},
-						});
-	
-						// Creating the Object 'title' -> response JSON key 'data.title'
-						this.setObjectNotExistsAsync('text', {
-							type: 'state',
-							common: {
-								name: 'Meldungstext',
-								type: 'string',
-								role: 'text',
-								read: true,
-								write: false
-							},
-							native: {},
-						});
-	
-						// Creating the Object 'address' -> response JSON key 'data.address'
-						this.setObjectNotExistsAsync('address', {
-							type: 'state',
-							common: {
-								name: 'Adresse',
-								type: 'string',
-								role: 'text',
-								read: true,
-								write: false
-							},
-							native: {},
-						});
-	
-						// Creating the Object 'lat' -> response JSON key 'data.lat'
-						this.setObjectNotExistsAsync('lat', {
-							type: 'state',
-							common: {
-								name: 'Längengrad',
-								type: 'number',
-								role: 'text',
-								read: true,
-								write: false
-							},
-							native: {},
-						});
-	
-						// Creating the Object 'lng' -> response JSON key 'data.lng'
-						this.setObjectNotExistsAsync('lng', {
-							type: 'state',
-							common: {
-								name: 'Breitengrad',
-								type: 'number',
-								role: 'text',
-								read: true,
-								write: false
-							},
-							native: {},
-						});
-	
-						// Creating the Object 'date' -> response JSON key 'data.date'
-						this.setObjectNotExistsAsync('date', {
-							type: 'state',
-							common: {
-								name: 'Alarmierungszeit',
-								type: 'number',
-								role: 'date',
-								read: true,
-								write: false
-							},
-							native: {},
-						});
-	
-						// Creating the Object 'priority' -> response JSON key 'data.priority'
-						this.setObjectNotExistsAsync('priority', {
-							type: 'state',
-							common: {
-								name: 'Priorität/Sonderrechte',
-								type: 'boolean',
-								role: 'indicator',
-								read: true,
-								write: false
-							},
-							native: {},
-						});
 
-						// Creating the Object 'addressed_users' -> response JSON key 'data.ucr_addressed'
-						this.setObjectNotExistsAsync('addressed_users', {
-							type: 'state',
-							common: {
-								name: 'Alarmierte Benutzer',
-								type: 'string',
-								role: 'text',
-								read: true,
-								write: false
-							},
-							native: {},
-						});
+						
+							// Creating the Object 'alarm' -> response JSON key 'success'
+							await this.setObjectNotExistsAsync('alarm', {
+								type: 'state',
+								common: {
+									name: 'Alarm',
+									type: 'boolean',
+									role: 'indicator',
+									read: true,
+									write: false
+								},
+								native: {},
+							});
+		
+							// Creating the Object 'title' -> response JSON key 'data.title'
+							await this.setObjectNotExistsAsync('title', {
+								type: 'state',
+								common: {
+									name: 'Einsatzstichwort',
+									type: 'string',
+									role: 'text',
+									read: true,
+									write: false
+								},
+								native: {},
+							});
+		
+							// Creating the Object 'title' -> response JSON key 'data.title'
+							await this.setObjectNotExistsAsync('text', {
+								type: 'state',
+								common: {
+									name: 'Meldungstext',
+									type: 'string',
+									role: 'text',
+									read: true,
+									write: false
+								},
+								native: {},
+							});
 
-						// Creating the Object 'addressed_group' -> response JSON key 'data.group'
-						this.setObjectNotExistsAsync('addressed_groups', {
-							type: 'state',
-							common: {
-								name: 'Alarmierte Gruppen',
-								type: 'string',
-								role: 'text',
-								read: true,
-								write: false
-							},
-							native: {},
-						});
+							// Creating the Object 'alarm_id' -> response JSON key 'data.id'
+							await this.setObjectNotExistsAsync('alarm_id', {
+								type: 'state',
+								common: {
+									name: 'Alarmierungs ID',
+									type: 'number',
+									role: 'text',
+									read: true,
+									write: false
+								},
+								native: {},
+							});
+		
+							// Creating the Object 'address' -> response JSON key 'data.address'
+							await this.setObjectNotExistsAsync('address', {
+								type: 'state',
+								common: {
+									name: 'Adresse',
+									type: 'string',
+									role: 'text',
+									read: true,
+									write: false
+								},
+								native: {},
+							});
+		
+							// Creating the Object 'lat' -> response JSON key 'data.lat'
+							await this.setObjectNotExistsAsync('lat', {
+								type: 'state',
+								common: {
+									name: 'Längengrad',
+									type: 'number',
+									role: 'text',
+									read: true,
+									write: false
+								},
+								native: {},
+							});
+		
+							// Creating the Object 'lng' -> response JSON key 'data.lng'
+							await this.setObjectNotExistsAsync('lng', {
+								type: 'state',
+								common: {
+									name: 'Breitengrad',
+									type: 'number',
+									role: 'text',
+									read: true,
+									write: false
+								},
+								native: {},
+							});
+		
+							// Creating the Object 'date' -> response JSON key 'data.date'
+							await this.setObjectNotExistsAsync('date', {
+								type: 'state',
+								common: {
+									name: 'Alarmierungszeit',
+									type: 'number',
+									role: 'date',
+									read: true,
+									write: false
+								},
+								native: {},
+							});
+		
+							// Creating the Object 'priority' -> response JSON key 'data.priority'
+							await this.setObjectNotExistsAsync('priority', {
+								type: 'state',
+								common: {
+									name: 'Priorität/Sonderrechte',
+									type: 'boolean',
+									role: 'indicator',
+									read: true,
+									write: false
+								},
+								native: {},
+							});
+
+							// Creating the Object 'addressed_users' -> response JSON key 'data.ucr_addressed'
+							await this.setObjectNotExistsAsync('addressed_users', {
+								type: 'state',
+								common: {
+									name: 'Alarmierte Benutzer',
+									type: 'string',
+									role: 'text',
+									read: true,
+									write: false
+								},
+								native: {},
+							});
+
+							// Creating the Object 'addressed_group' -> response JSON key 'data.group'
+							await this.setObjectNotExistsAsync('addressed_groups', {
+								type: 'state',
+								common: {
+									name: 'Alarmierte Gruppen',
+									type: 'string',
+									role: 'text',
+									read: true,
+									write: false
+								},
+								native: {},
+							});
+		
+							// Creating the Object 'lastUpdate' -> current timestamp
+							await this.setObjectNotExistsAsync('lastUpdate', {
+								type: 'state',
+								common: {
+									name: 'Letzte Aktualisierung',
+									type: 'number',
+									role: 'value.time',
+									read: true,
+									write: false
+								},
+								native: {},
+							});
+						
 	
-						// Creating the Object 'lastUpdate' -> current timestamp
-						this.setObjectNotExistsAsync('lastUpdate', {
-							type: 'state',
-							common: {
-								name: 'Letzte Aktualisierung',
-								type: 'number',
-								role: 'value.time',
-								read: true,
-								write: false
-							},
-							native: {},
-						});
-	
-						// Initialisation of the states
-						this.setState('alarm', { val: false, ack: true });
-						this.setState('title', { val: null, ack: true });
-						this.setState('text', { val: null, ack: true });
-						this.setState('address', { val: null, ack: true });
-						this.setState('lat', { val: null, ack: true });
-						this.setState('lng', { val: null, ack: true });
-						this.setState('date', { val: null, ack: true });
-						this.setState('priority', { val: null, ack: true });
-						this.setState('addressed_users', { val: null, ack: true });
-						this.setState('addressed_groups', { val: null, ack: true });
-						this.setState('lastUpdate', { val: null, ack: true });
+						
+							// Initialisation of the states
+							await this.setState('title', { val: null});
+							await this.setState('text', { val: null});
+							await this.setState('alarm_id', { val: null});
+							await this.setState('address', { val: null});
+							await this.setState('lat', { val: null});
+							await this.setState('lng', { val: null});
+							await this.setState('date', { val: null});
+							await this.setState('priority', { val: null});
+							await this.setState('addressed_users', { val: null});
+							await this.setState('addressed_groups', { val: null});
+							await this.setState('lastUpdate', { val: null});
+							await this.setState('alarm', { val: false});
+						
 	
 						// Registration of an interval calling the main function for this adapter
 						let repeatingFunctionCall = setInterval(() => {
@@ -268,19 +286,22 @@ class Divera247 extends utils.Adapter {
 				this.setState('lastUpdate', { val: Date.now(), ack: true });
 				
 				// Setting the alarm specific states when a new alarm is active and addressed to the configured divera user id
-				if (content.success && lastAlarmId != content.data.id && content.data.ucr_addressed.includes(diveraUserId)) {
+				if (content.success && lastAlarmId != content.data.id) {
 					lastAlarmId = content.data.id;
 					lastAlarmStatus = content.success;
-					this.setState('alarm', { val: content.success, ack: true });
-					this.setState('title', { val: content.data.title, ack: true });
-					this.setState('text', { val: content.data.text, ack: true });
-					this.setState('address', { val: content.data.address, ack: true });
-					this.setState('lat', { val: content.data.lat, ack: true });
-					this.setState('lng', { val: content.data.lng, ack: true });
-					this.setState('date', { val: content.data.date * 1000, ack: true });
-					this.setState('priority', { val: content.data.priority, ack: true });
-					this.setState('addressed_users', { val: content.data.ucr_addressed, ack: true });
-					this.setState('addressed_groups', { val: content.data.group, ack: true });
+					if (content.data.ucr_addressed.includes(diveraUserId)) {
+						this.setState('title', { val: content.data.title, ack: true });
+						this.setState('text', { val: content.data.text, ack: true });
+						this.setState('alarm_id', { val: content.data.id, ack: true });
+						this.setState('address', { val: content.data.address, ack: true });
+						this.setState('lat', { val: content.data.lat, ack: true });
+						this.setState('lng', { val: content.data.lng, ack: true });
+						this.setState('date', { val: content.data.date * 1000, ack: true });
+						this.setState('priority', { val: content.data.priority, ack: true });
+						this.setState('addressed_users', { val: content.data.ucr_addressed, ack: true });
+						this.setState('addressed_groups', { val: content.data.group, ack: true });
+						this.setState('alarm', { val: content.success, ack: true });
+					}
 				} else if (content.success != lastAlarmStatus) {
 					lastAlarmStatus = content.success;
 					this.setState('alarm', { val: content.success, ack: true });
@@ -292,19 +313,19 @@ class Divera247 extends utils.Adapter {
 					// The request was made and the server responded with a error status code
 					if (error.response.status == 403) {
 						this.log.error('Access-Token has been invalid. Please use a valid token!');
-						this.setState('info.connection', false, true);
+						this.setState('alarm', { val: content.success, ack: true });this.setState('info.connection', false, true);
 					} else {
 						this.log.warn('received error ' + error.response.status + ' response with content: ' + JSON.stringify(error.response.data));
-						this.setState('info.connection', false, true);
+						this.setState('alarm', { val: content.success, ack: true });this.setState('info.connection', false, true);
 					}
 				} else if (error.request) {
 					// The request was made but no response was received
 					this.log.error(error.message);
-					this.setState('info.connection', false, true);
+					this.setState('alarm', { val: content.success, ack: true });this.setState('info.connection', false, true);
 				} else {
 					// Something happened in setting up the request that triggered an Error
 					this.log.error(error.message);
-					this.setState('info.connection', false, true);
+					this.setState('alarm', { val: content.success, ack: true });this.setState('info.connection', false, true);
 				}
 			}.bind(this)
 		)
