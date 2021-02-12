@@ -274,7 +274,8 @@ class Divera247 extends utils.Adapter {
 		// Calling the alerting-server api
 		axios({
 			method: 'get',
-			url: 'https://efe7d2eb-694d-492d-b180-f84f0f870cae.mock.pstmn.io',
+			baseURL: 'https://www.divera247.com/',
+			url: '/api/last-alarm?accesskey=' + diveraAccessKey,
 			responseType: 'json'
 		}).then(
 			function (response) {
