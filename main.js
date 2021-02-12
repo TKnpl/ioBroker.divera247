@@ -192,7 +192,7 @@ class Divera247 extends utils.Adapter {
 	
 						// Registration of an interval calling the main function for this adapter
 						let repeatingFunctionCall = setInterval(() => {
-							this.getDataFromApiAndSetObjects(diveraAccessKey);
+							this.getDataFromApiAndSetObjects(diveraAccessKey, diveraUserId);
 						}, pollIntervallMilliseconds);
 					}
 				} else {
@@ -252,7 +252,7 @@ class Divera247 extends utils.Adapter {
 	/*
 	*	Function that calls the API and set the Object States
 	*/
-	getDataFromApiAndSetObjects(diveraAccessKey) {
+	getDataFromApiAndSetObjects(diveraAccessKey, diveraUserId) {
 		// Calling the alerting-server api
 		axios({
 			method: 'get',
@@ -267,8 +267,8 @@ class Divera247 extends utils.Adapter {
 				// Setting the update state
 				this.setState('lastUpdate', { val: Date.now(), ack: true });
 				
-				// Setting the alarm specific states when a new alarm is active
-				if (content.success && lastAlarmId != content.data.id) {
+				// Setting the alarm specific states when a new alarm is active and addressed to the configured divera user id
+				if (content.success && lastAlarmId != content.data.id && content.data.ucr_addressed.includes(diveraUserId)) {
 					lastAlarmId = content.data.id;
 					lastAlarmStatus = content.success;
 					this.setState('alarm', { val: content.success, ack: true });
