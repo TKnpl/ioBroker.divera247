@@ -44,6 +44,19 @@ class Divera247 extends utils.Adapter {
 						},
 						native: {},
 					});
+					
+					// Creating the Object 'foreign_ID' -> response JSON key 'data.foreign_ID'
+					this.setObjectNotExistsAsync('foreign_ID', {
+						type: 'state',
+						common: {
+							name: 'Einsatznummer',
+							type: 'number',
+							role: 'text',
+							read: true,
+							write: false
+						},
+						native: {},
+					});
 
 					// Creating the Object 'title' -> response JSON key 'data.title'
 					this.setObjectNotExistsAsync('title', {
@@ -162,8 +175,9 @@ class Divera247 extends utils.Adapter {
 						native: {},
 					});
 
-					// Initialisation of the states
+					// Initialisation of the states 
 					this.setState('alarm', { val: false, ack: true });
+					this.setState('foreign_ID', { val: null, ack: true });
 					this.setState('title', { val: null, ack: true });
 					this.setState('text', { val: null, ack: true });
 					this.setState('address', { val: null, ack: true });
@@ -254,6 +268,7 @@ class Divera247 extends utils.Adapter {
 					lastAlarmId = content.data.id;
 					lastAlarmStatus = content.success;
 					this.setState('alarm', { val: content.success, ack: true });
+					this.setState('foreign_ID', { val: content.data.foreign_ID, ack: true });
 					this.setState('title', { val: content.data.title, ack: true });
 					this.setState('text', { val: content.data.text, ack: true });
 					this.setState('address', { val: content.data.address, ack: true });
