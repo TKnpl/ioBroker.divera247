@@ -194,18 +194,18 @@ class Divera247 extends utils.Adapter {
 	
 						
 							// Initialisation of the states
-							await this.setState('title', { val: null});
-							await this.setState('text', { val: null});
-							await this.setState('foreign_id', { val: null});
-							await this.setState('address', { val: null});
-							await this.setState('lat', { val: null});
-							await this.setState('lng', { val: null});
-							await this.setState('date', { val: null});
-							await this.setState('priority', { val: null});
-							await this.setState('addressed_users', { val: null});
-							await this.setState('addressed_groups', { val: null});
-							await this.setState('lastUpdate', { val: null});
-							await this.setState('alarm', { val: false});
+							await this.setState('title', { val: null });
+							await this.setState('text', { val: null });
+							await this.setState('foreign_id', { val: null });
+							await this.setState('address', { val: null });
+							await this.setState('lat', { val: null });
+							await this.setState('lng', { val: null });
+							await this.setState('date', { val: null });
+							await this.setState('priority', { val: null });
+							await this.setState('addressed_users', { val: null });
+							await this.setState('addressed_groups', { val: null });
+							await this.setState('lastUpdate', { val: null });
+							await this.setState('alarm', { val: false, ack: true });
 						
 	
 						// Registration of an interval calling the main function for this adapter
