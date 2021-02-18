@@ -74,11 +74,11 @@ class Divera247 extends utils.Adapter {
 								native: {},
 							});
 
-							// Creating the Object 'alarm_id' -> response JSON key 'data.id'
-							await this.setObjectNotExistsAsync('alarm_id', {
+							// Creating the Object 'foreign_id' -> response JSON key 'data.foreign_id'
+							await this.setObjectNotExistsAsync('foreign_id', {
 								type: 'state',
 								common: {
-									name: 'Alarmierungs ID',
+									name: 'Einsatznummer',
 									type: 'number',
 									role: 'text',
 									read: true,
@@ -196,7 +196,7 @@ class Divera247 extends utils.Adapter {
 							// Initialisation of the states
 							await this.setState('title', { val: null});
 							await this.setState('text', { val: null});
-							await this.setState('alarm_id', { val: null});
+							await this.setState('foreign_id', { val: null});
 							await this.setState('address', { val: null});
 							await this.setState('lat', { val: null});
 							await this.setState('lng', { val: null});
@@ -293,7 +293,7 @@ class Divera247 extends utils.Adapter {
 					if (content.data.ucr_addressed.includes(diveraUserId)) {
 						this.setState('title', { val: content.data.title, ack: true });
 						this.setState('text', { val: content.data.text, ack: true });
-						this.setState('alarm_id', { val: content.data.id, ack: true });
+						this.setState('foreign_id', { val: content.data.foreign_id, ack: true });
 						this.setState('address', { val: content.data.address, ack: true });
 						this.setState('lat', { val: content.data.lat, ack: true });
 						this.setState('lng', { val: content.data.lng, ack: true });

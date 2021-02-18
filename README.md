@@ -20,9 +20,10 @@ Adapter for the alerting service "Divera 24/7"
 Your organisation has to subscribe the "Alarm" plan of Divera 24/7 services for full usability of this adapter
 
 ## Configuartion of this adapter
-You have to enter your personal "Divera 24/7" access token to this adapter.
-To find out the token, go to the official [Divera 24 / 7 webseite](https://www.divera247.com/) and navigate to administration -> settings -> interfaces -> API. Here you can find the token in the "authorisation" area.
-Copy the token and paste it in the admin page of this adapter.
+You have to enter your personal "Divera 24/7" access token and user ID to this adapter.
+To find out the access token, go to the official [Divera 24 / 7 webseite](https://www.divera247.com/) and navigate to administration -> settings -> interfaces -> API. Here you can find the token in the "authorisation" area.
+To find out the user ID, go to the official [Divera 24 / 7 webseite](https://www.divera247.com/) and navigate to user profile -> settings -> debug -> "Aktuelle ID".
+Copy these values and paste it in the relevant fields in the admin page of this adapter.
 Furthermore please chose an updating interval for calling the API server. 30 seconds are recommended. The minimum is 10 seconds.
 
 ## Changelog
