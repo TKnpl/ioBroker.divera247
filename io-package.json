@@ -1,8 +1,12 @@
 {
 	"common": {
 		"name": "divera247",
-		"version": "0.0.7",
+		"version": "0.0.8",
 		"news": {
+			"0.0.8": {
+				"en": "Changed API call from intervall to timeout, added states 'group' and 'foreign_id'",
+				"de": "Apfrage der API von Intervall auf Timeout geändert, States 'Gruppe' und 'Einsatznummer' hinzugefügt"
+			},
 			"0.0.7": {
 				"en": "added object priority and alarm object updates only in case of an new alarm or when an alarm was closed",
 				"de": "Objekt Priorität/Sonderrechte hinzugefügt und Alarm wird nur noch bei neuem oder Schließung eines Alarms aktualisiert"

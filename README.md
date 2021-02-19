@@ -31,6 +31,9 @@ Furthermore please chose an updating interval for calling the API server. 30 sec
 
 ## Changelog
 
+### 0.0.8
+* (TKnpl) Changed API call from intervall to timeout, added states 'group' and 'foreign_id'
+
 ### 0.0.7
 * (TKnpl) added object 'priority' and 'alarm' object updates only in case of an new alarm or when an alarm was closed
 
