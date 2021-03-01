@@ -77,6 +77,8 @@
 		]
 	},
 	"native": {
+		"diveraAccessKey": "",
+		"diveraUserId": 0,
 		"pollIntervall": 30
 	},
 	"objects": [],
