@@ -1,8 +1,12 @@
 {
 	"common": {
 		"name": "divera247",
-		"version": "0.0.8",
+		"version": "0.0.9",
 		"news": {
+			"0.0.9": {
+				"en": "added default values for admin page",
+				"de": "Standardwerte für Admin-Seite hinzugefügt"
+			},
 			"0.0.8": {
 				"en": "Changed API call from intervall to timeout, added states 'group' and 'foreign_id'",
 				"de": "Apfrage der API von Intervall auf Timeout geändert, States 'Gruppe' und 'Einsatznummer' hinzugefügt"

@@ -17,7 +17,7 @@
 Adapter for the alerting service "Divera 24/7"
 
 ## Requirements
-Your organisation has to subscribe the "Alarm" plan of Divera 24/7 services for full usability of this adapter
+For full usability of this adapter your organisation has to subscribe the "Alarm" plan of Divera 24/7 services
 
 ## Configuartion of this adapter
 You have to enter your personal "Divera 24/7" access token and user ID to this adapter.
@@ -30,6 +30,9 @@ Copy these values and paste it in the relevant fields in the admin page of this 
 Furthermore please chose an updating interval for calling the API server. 30 seconds are recommended. The minimum is 10 seconds.
 
 ## Changelog
+
+### 0.0.9
+* (TKnpl) added default values for admin page
 
 ### 0.0.8
 * (TKnpl) Changed API call from intervall to timeout, added states 'group' and 'foreign_id'
@@ -54,9 +57,6 @@ Furthermore please chose an updating interval for calling the API server. 30 sec
 
 ### 0.0.1
 * (TKnpl) initial commit
-
-## What's next
-* Adding more data points for informations in case of an active alert
 
 ## License
 MIT License
