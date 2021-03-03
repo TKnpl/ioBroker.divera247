@@ -71,16 +71,17 @@
 			</div>
 		</div>
 		<div class="row">
-			<div class="col s6 input-field">
+			<div class="col s5 input-field">
 				<input type="text" class="value" id="diveraAccessKey" />
-				<label for="diveraAccessKey" class="translate">Access-Key</label>
-				<span id="diveraAccessKeyInformation" class="translate">Personal Access-Key for Divera 24 / 7</span><br>
+				<label for="diveraAccessKey" class="translate">API-Key</label>
+				<span id="diveraAccessKeyInformation" class="translate">API-Key for your Divera 24 / 7 organisation</span><br>
 				<a href='https://github.com/TKnpl/ioBroker.divera247/blob/master/README.md#configuartion-of-this-adapter' target='_blank'><span id="diveraConfigurationHelpLink" class="translate">Configuration help</span></a>
 			</div>
-			<div class="col s3 input-field">
-				<input type="number" class="value" id="diveraUserId" />
+			<div class="col s4 input-field">
+				<input type="text" class="value" id="diveraUserId" />
 				<label for="diveraUserId" class="translate">Divera user ID</label>
-				<span id="diveraUserIdInformation" class="translate">Personal User ID in Divera 24 / 7</span>
+				<span id="diveraUserIdInformation" class="translate">Alarm only for following Divera User IDs</span><br>
+				<span id="diveraUserIdInformationForAllAlarms" class="translate">(leave blank to subscribe all alarms)</span>
 			</div>
 			<div class="col s3 input-field">
 				<input type="number" class="value" id="pollIntervall" min="10" />

@@ -1,8 +1,12 @@
 {
 	"common": {
 		"name": "divera247",
-		"version": "0.0.9",
+		"version": "0.0.10",
 		"news": {
+			"0.0.10": {
+				"en": "bug in info.connection fixed and handling of user ids expanded",
+				"de": "Fehler in Verbindungsanzeige behoben und Handling von UserIDs erweitert"
+			},
 			"0.0.9": {
 				"en": "added default values for admin page",
 				"de": "Standardwerte für Admin-Seite hinzugefügt"
@@ -82,7 +86,7 @@
 	},
 	"native": {
 		"diveraAccessKey": "",
-		"diveraUserId": 0,
+		"diveraUserId": "",
 		"pollIntervall": 30
 	},
 	"objects": [],

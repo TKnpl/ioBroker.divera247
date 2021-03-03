@@ -14,29 +14,29 @@ systemDictionary = {
 		"pl": "Ustawienia adaptera divera247",
 		"zh-cn": "divera247适配器设置"
 	},
-	"Access-Key": {
-		"en": "Access-Key",
-		"de": "Zugangs-Key",
-		"ru": "Ключ доступа",
-		"pt": "Chave de acesso",
-		"nl": "Toegangssleutel",
-		"fr": "Clé d'accès",
-		"it": "Chiave di accesso",
-		"es": "Llave de acceso",
-		"pl": "Klucz dostępu",
-		"zh-cn": "存取键"
+	"API-Key": {
+		"en": "API-Key",
+		"de": "API-Key",
+		"ru": "API-ключ",
+		"pt": "Chave API",
+		"nl": "API sleutel",
+		"fr": "Clé API",
+		"it": "Chiave API",
+		"es": "Clave API",
+		"pl": "Klucz API",
+		"zh-cn": "API密钥"
 	},
-	"Personal Access-Key for Divera 24 / 7": {
-		"en": "Personal Access-Key for Divera 24 / 7",
-		"de": "Persönlicher Zugangs-Key für Divera 24/7",
-		"ru": "Персональный ключ доступа для Divera 24/7",
-		"pt": "Chave de acesso pessoal para Divera 24/7",
-		"nl": "Persoonlijke toegangssleutel voor Divera 24/7",
-		"fr": "Clé d'accès personnelle pour Divera 24/7",
-		"it": "Chiave di accesso personale per Divera 24/7",
-		"es": "Clave de acceso personal para Divera 24/7",
-		"pl": "Osobisty klucz dostępu do Divera 24/7",
-		"zh-cn": "Divera 24/7的个人访问密钥"
+	"API-Key for your Divera 24 / 7 organisation": {
+		"en": "API-Key for your Divera 24 / 7 organisation",
+		"de": "API-Key für Ihre Divera 24/7 Einheit",
+		"ru": "API-ключ для вашей организации Divera 24/7",
+		"pt": "Chave API para sua organização Divera 24/7",
+		"nl": "API-Key voor uw Divera 24/7 organisatie",
+		"fr": "Clé API pour votre organisation Divera 24/7",
+		"it": "Chiave API per la tua organizzazione Divera 24 ore su 24, 7 giorni su 7",
+		"es": "API-Key para su organización Divera 24/7",
+		"pl": "Klucz API dla Twojej organizacji Divera 24/7",
+		"zh-cn": "适用于Divera 24/7组织的API密钥"
 	},
 	"Configuration help": {
 		"en": "Configuration help",
@@ -62,17 +62,29 @@ systemDictionary = {
 		"pl": "Identyfikator użytkownika Divera",
 		"zh-cn": "Divera用户ID"
 	},
-	"Personal User ID in Divera 24 / 7": {
-		"en": "Personal User ID in Divera 24 / 7",
-		"de": "Persönliche Benutzer ID in Divera 24/7",
-		"ru": "Персональный идентификатор пользователя в Divera 24/7",
-		"pt": "ID de usuário pessoal em Divera 24/7",
-		"nl": "Persoonlijke gebruikers-ID in Divera 24/7",
-		"fr": "ID utilisateur personnel dans Divera 24/7",
-		"it": "ID utente personale in Divera 24/7",
-		"es": "Identificación de usuario personal en Divera 24/7",
-		"pl": "Osobisty identyfikator użytkownika w Divera 24/7",
-		"zh-cn": "Divera中的个人用户ID 24/7"
+	"Alarm only for following Divera User IDs": {
+		"en": "Alarm only for following Divera User IDs",
+		"de": "Alarm nur für folgende Divera-Benutzer-IDs",
+		"ru": "Тревога только для следующих идентификаторов пользователя Divera",
+		"pt": "Alarme apenas para os seguintes IDs de usuário Divera",
+		"nl": "Alarm alleen voor volgende Divera gebruikers-ID's",
+		"fr": "Alarme uniquement pour les ID utilisateur Divera suivants",
+		"it": "Allarme solo per i seguenti ID utente Divera",
+		"es": "Alarma solo para los siguientes ID de usuario de Divera",
+		"pl": "Alarm tylko dla następujących identyfikatorów użytkowników Divera",
+		"zh-cn": "仅针对以下Divera用户ID发出警报"
+	},
+	"(leave blank to subscribe all alarms)": {
+		"en": "(leave blank to subscribe all alarms)",
+		"de": "(Leer lassen, um alle Alarme zu abonnieren)",
+		"ru": "(оставьте поле пустым, чтобы подписаться на все будильники)",
+		"pt": "(deixe em branco para inscrever todos os alarmes)",
+		"nl": "(laat dit veld leeg om alle alarmen te abonneren)",
+		"fr": "(laissez vide pour souscrire à toutes les alarmes)",
+		"it": "(lasciare vuoto per sottoscrivere tutti gli allarmi)",
+		"es": "(déjelo en blanco para suscribir todas las alarmas)",
+		"pl": "(pozostaw puste, aby zasubskrybować wszystkie alarmy)",
+		"zh-cn": "（留空以订阅所有警报）"
 	},
 	"update interval (seconds)": {
 		"en": "update interval (seconds)",
