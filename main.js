@@ -232,7 +232,7 @@ class Divera247 extends utils.Adapter {
 		}).then(
 			function (response) {
 				if (response.status == 200) {
-					this.log.debug('Connection to API succeeded');
+					this.log.debug('Connected to API');
 					return true;
 				} else {
 					this.log.warn('Connection to API failed. Please check your API-Key and try again');
@@ -277,6 +277,14 @@ class Divera247 extends utils.Adapter {
 			function (response) {
 				const content = response.data;
 
+				this.getState('info.connection', function (err, state) {
+					if (!state.val) {
+						this.setState('info.connection', true, true);
+						this.log.debug('Reconnected to API');
+					}
+				}.bind(this)
+				);
+
 				this.log.debug('Received data from Divera-API (' + response.status + '): ' + JSON.stringify(content));
 
 				// Setting the update state
@@ -310,19 +318,19 @@ class Divera247 extends utils.Adapter {
 					// The request was made and the server responded with a error status code
 					if (error.response.status == 403) {
 						this.log.error('Access-Token has been invalid. Please use a valid token!');
-						this.setState('alarm', { val: content.success, ack: true }); this.setState('info.connection', false, true);
+						this.setState('info.connection', false, true);
 					} else {
 						this.log.warn('received error ' + error.response.status + ' response with content: ' + JSON.stringify(error.response.data));
-						this.setState('alarm', { val: content.success, ack: true }); this.setState('info.connection', false, true);
+						this.setState('info.connection', false, true);
 					}
 				} else if (error.request) {
 					// The request was made but no response was received
 					this.log.error(error.message);
-					this.setState('alarm', { val: content.success, ack: true }); this.setState('info.connection', false, true);
+					this.setState('info.connection', false, true);
 				} else {
 					// Something happened in setting up the request that triggered an Error
 					this.log.error(error.message);
-					this.setState('alarm', { val: content.success, ack: true }); this.setState('info.connection', false, true);
+					this.setState('info.connection', false, true);
 				}
 			}.bind(this)
 		)
@@ -338,10 +346,10 @@ class Divera247 extends utils.Adapter {
 	onUnload(callback) {
 		try {
 			if (this.refreshStateTimeout) {
-				this.log.debug('clearing refresh state timeout');
+				this.log.debug('clearing refreshStateTimeout');
 				clearTimeout(this.refreshStateTimeout);
 			}
-			this.log.debug('cleaned everything up...');
+			this.log.debug('cleaned everything up');
 			callback();
 		} catch (e) {
 			callback();
