@@ -52,7 +52,7 @@ systemDictionary = {
 	},
 	"Divera user IDs": {
 		"en": "Divera user IDs",
-		"de": "Divera Benutzer IDs",
+		"de": "Divera Benutzer-IDs",
 		"ru": "ID пользователя Divera",
 		"pt": "ID de usuário Divera",
 		"nl": "Divera gebruikers-ID",
@@ -62,9 +62,9 @@ systemDictionary = {
 		"pl": "Identyfikator użytkownika Divera",
 		"zh-cn": "Divera用户ID"
 	},
-	"Alarm only for following Divera User IDs": {
-		"en": "Alarm only for following Divera User IDs",
-		"de": "Alarm nur für folgende Divera-Benutzer-IDs",
+	"Alarm only for following Divera user IDs": {
+		"en": "Alarm only for following Divera user IDs",
+		"de": "Alarm nur für folgende Divera Benutzer-IDs",
 		"ru": "Тревога только для следующих идентификаторов пользователя Divera",
 		"pt": "Alarme apenas para os seguintes IDs de usuário Divera",
 		"nl": "Alarm alleen voor volgende Divera gebruikers-ID's",
@@ -88,7 +88,7 @@ systemDictionary = {
 	},
 	"Divera alarm groups": {
 		"en": "Divera alarm groups",
-		"de": "Divera Alarmgruppen",
+		"de": "Divera Alarm-Gruppen",
 		"ru": "Группы сигналов тревоги Divera",
 		"pt": "Grupos de alarme Divera",
 		"nl": "Divera alarmgroepen",
@@ -100,7 +100,7 @@ systemDictionary = {
 	},
 	"Alarm only for following Divera alarm groups": {
 		"en": "Alarm only for following Divera alarm groups",
-		"de": "Alarm nur für folgende Divera-Alarmgruppen",
+		"de": "Alarm nur für folgende Divera Alarm-Gruppen",
 		"ru": "Тревога только для следующих групп тревог Divera",
 		"pt": "Alarme apenas para os seguintes grupos de alarme Divera",
 		"nl": "Alarm alleen voor volgende Divera alarmgroepen",
@@ -124,7 +124,7 @@ systemDictionary = {
 	},
 	"minimum 10 seconds": {
 		"en": "minimum 10 seconds",
-		"de": "mindestens 10 Sekunden",
+		"de": "Minimum 10 Sekunden",
 		"ru": "минимум 10 секунд",
 		"pt": "mínimo 10 segundos",
 		"nl": "minimaal 10 seconden",

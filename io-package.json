@@ -1,8 +1,12 @@
 {
   "common": {
     "name": "divera247",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "news": {
+      "0.1.1": {
+        "en": "small changes - wording",
+        "de": "Kleine Änderungen in Bezeichnungen"
+      },
       "0.1.0": {
         "en": "added possibility to specify alarm groups",
         "de": "Möglichkeit hinzugefügt, nur auf Alarmierungen bestimmter Alarm-Gruppe zu lauschen"

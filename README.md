@@ -34,6 +34,9 @@ Furthermore please choose an updating interval for calling the API server. 30 se
 
 ## Changelog
 
+### 0.1.1
+* (TKnpl) small changes - wording
+
 ### 0.1.0
 * (TKnpl) added possibility to specify alarm groups
 
