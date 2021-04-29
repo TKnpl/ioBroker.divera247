@@ -86,8 +86,7 @@
       {
         "js-controller": ">=2.0.0"
       }
-    ],
-    "installedFrom": "iobroker.divera247@0.0.10"
+    ]
   },
   "native": {
     "diveraAccessKey": "",
