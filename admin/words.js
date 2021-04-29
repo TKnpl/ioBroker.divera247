@@ -50,9 +50,9 @@ systemDictionary = {
 		"pl": "Pomoc w konfiguracji",
 		"zh-cn": "配置帮助"
 	},
-	"Divera user ID": {
-		"en": "Divera user ID",
-		"de": "Divera Benutzer ID",
+	"Divera user IDs": {
+		"en": "Divera user IDs",
+		"de": "Divera Benutzer IDs",
 		"ru": "ID пользователя Divera",
 		"pt": "ID de usuário Divera",
 		"nl": "Divera gebruikers-ID",
@@ -85,6 +85,30 @@ systemDictionary = {
 		"es": "(déjelo en blanco para suscribir todas las alarmas)",
 		"pl": "(pozostaw puste, aby zasubskrybować wszystkie alarmy)",
 		"zh-cn": "（留空以订阅所有警报）"
+	},
+	"Divera alarm groups": {
+		"en": "Divera alarm groups",
+		"de": "Divera Alarmgruppen",
+		"ru": "Группы сигналов тревоги Divera",
+		"pt": "Grupos de alarme Divera",
+		"nl": "Divera alarmgroepen",
+		"fr": "Groupes d'alarmes Divera",
+		"it": "Divera gruppi di allarme",
+		"es": "Grupos de alarma Divera",
+		"pl": "Grupy alarmowe Divera",
+		"zh-cn": "Divera警报组"
+	},
+	"Alarm only for following Divera alarm groups": {
+		"en": "Alarm only for following Divera alarm groups",
+		"de": "Alarm nur für folgende Divera-Alarmgruppen",
+		"ru": "Тревога только для следующих групп тревог Divera",
+		"pt": "Alarme apenas para os seguintes grupos de alarme Divera",
+		"nl": "Alarm alleen voor volgende Divera alarmgroepen",
+		"fr": "Alarme uniquement pour les groupes d'alarmes Divera suivants",
+		"it": "Allarme solo per i seguenti gruppi di allarme Divera",
+		"es": "Alarma solo para los siguientes grupos de alarmas de Divera",
+		"pl": "Alarm tylko dla następujących grup alarmowych Divera",
+		"zh-cn": "仅针对以下Divera警报组发出警报"
 	},
 	"update interval (seconds)": {
 		"en": "update interval (seconds)",

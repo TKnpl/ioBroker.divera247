@@ -24,10 +24,12 @@ class Divera247 extends utils.Adapter {
 	async onReady() {
 		const diveraAccessKey = this.config.diveraAccessKey;
 		const diveraUserIdInput = this.config.diveraUserId;
+		const diveraUserGroupInput = this.config.diveraAlarmGroup;
 		const pollIntervallSeconds = this.config.pollIntervall;
 		const pollIntervallSecondsMinimum = 10;
 
 		let diveraUserIDs = diveraUserIdInput.replace(/\s/g, "").split(',');
+		let diveraUserGroups = diveraUserGroupInput.replace(/\s/g, "").split(',');
 
 		this.setState('info.connection', false, true);
 
@@ -43,7 +45,19 @@ class Divera247 extends utils.Adapter {
 			}
 		};
 
-		if (diveraAccessKey && pollIntervallSeconds && userIDInputIsValid) {
+		// Check if all values of diveraUserGroups are numbers => valid
+		let userGroupInputIsValid = true;
+		if (diveraUserGroups.length > 0 && diveraUserGroups != "") {
+			for (let userGroupfromInput of diveraUserGroups) {
+				if (isNaN(userGroupfromInput)) {
+					this.log.error('UserGroup \'' + userGroupfromInput + '\' is not a Number')
+					userGroupInputIsValid = false;
+					break;
+				}
+			}
+		};
+
+		if (diveraAccessKey && pollIntervallSeconds && userIDInputIsValid && userGroupInputIsValid) {
 			if (pollIntervallSeconds >= pollIntervallSecondsMinimum) {
 				if (await this.checkConnectionToApi(diveraAccessKey)) {
 					// Connected to API
@@ -220,7 +234,7 @@ class Divera247 extends utils.Adapter {
 					await this.setState('alarm', { val: false, ack: true });
 
 					// Start repeating Call of the API
-					await this.getDataFromApiAndSetObjects(diveraAccessKey, diveraUserIDs);
+					await this.getDataFromApiAndSetObjects(diveraAccessKey, diveraUserIDs, diveraUserGroups);
 				}
 			} else {
 				this.log.error('The update interval must be at least ' + pollIntervallSecondsMinimum + ' seconds!');
@@ -276,7 +290,7 @@ class Divera247 extends utils.Adapter {
 	/*
 	*	Function that calls the API and set the Object States
 	*/
-	async getDataFromApiAndSetObjects(diveraAccessKey, diveraUserIDs) {
+	async getDataFromApiAndSetObjects(diveraAccessKey, diveraUserIDs, diveraUserGroups) {
 		// Calling the alerting-server api
 		await axios({
 			method: 'get',
@@ -307,9 +321,16 @@ class Divera247 extends utils.Adapter {
 					lastAlarmId = content.data.id;
 					lastAlarmStatus = content.success;
 
+					// Checking for specified userIDs or groups - helper variables
+					let userOrGroupFoundAndUpdated = false;
+					let userIDsAvailable = false;
+					let groupsAvailable = false;
+
+					// Checking if userIDs are specified and alarmed
 					if (diveraUserIDs.length > 0 && diveraUserIDs != "") {
+						userIDsAvailable = true;
 						for (let elm of diveraUserIDs) {
-							this.log.debug('checking if userID \'' + elm + '\' is alarmed');
+							this.log.debug('checking if user \'' + elm + '\' is alarmed');
 							if (content.data.ucr_addressed.includes(parseInt(elm, 10))) {
 								this.setState('title', { val: content.data.title, ack: true });
 								this.setState('text', { val: content.data.text, ack: true });
@@ -322,14 +343,44 @@ class Divera247 extends utils.Adapter {
 								this.setState('addressed_users', { val: content.data.ucr_addressed, ack: true });
 								this.setState('addressed_groups', { val: content.data.group, ack: true });
 								this.setState('alarm', { val: content.success, ack: true });
-								this.log.debug('user is alarmed and states has been refreshed for the current alarm');
+								this.log.debug('user is alarmed - states refreshed for the current alarm');
+								userOrGroupFoundAndUpdated = true;
 								break;
 							} else {
 								this.log.debug('user is not alarmed');
 							}
 						}
-					} else {
-						this.log.debug('userID check skipped as of no user is specified');
+					}
+
+					// Checking if groups are specified and alarmed
+					if (diveraUserGroups.length > 0 && diveraUserGroups != "" && !userOrGroupFoundAndUpdated) {
+						groupsAvailable = true;
+						for (let elm of diveraUserGroups) {
+							this.log.debug('checking if group \'' + elm + '\' is alarmed');
+							if (content.data.group.includes(parseInt(elm, 10))) {
+								this.setState('title', { val: content.data.title, ack: true });
+								this.setState('text', { val: content.data.text, ack: true });
+								this.setState('foreign_id', { val: content.data.foreign_id, ack: true });
+								this.setState('address', { val: content.data.address, ack: true });
+								this.setState('lat', { val: content.data.lat, ack: true });
+								this.setState('lng', { val: content.data.lng, ack: true });
+								this.setState('date', { val: content.data.date * 1000, ack: true });
+								this.setState('priority', { val: content.data.priority, ack: true });
+								this.setState('addressed_users', { val: content.data.ucr_addressed, ack: true });
+								this.setState('addressed_groups', { val: content.data.group, ack: true });
+								this.setState('alarm', { val: content.success, ack: true });
+								this.log.debug('group is alarmed - states refreshed for the current alarm');
+								userOrGroupFoundAndUpdated = true;
+								break;
+							} else {
+								this.log.debug('group is not alarmed');
+							}
+						}
+					}
+
+					// Updating states if no userID or group is specified
+					if (!userIDsAvailable && !groupsAvailable) {
+						this.log.debug('userID and group check skipped as of no userID or group is specified');
 						this.setState('title', { val: content.data.title, ack: true });
 						this.setState('text', { val: content.data.text, ack: true });
 						this.setState('foreign_id', { val: content.data.foreign_id, ack: true });
@@ -341,11 +392,12 @@ class Divera247 extends utils.Adapter {
 						this.setState('addressed_users', { val: content.data.ucr_addressed, ack: true });
 						this.setState('addressed_groups', { val: content.data.group, ack: true });
 						this.setState('alarm', { val: content.success, ack: true });
-						this.log.debug('states has been refreshed for the current alarm');
+						this.log.debug('states refreshed for the current alarm');
 					}
 				} else if (content.success != lastAlarmStatus) {
 					lastAlarmStatus = content.success;
 					this.setState('alarm', { val: content.success, ack: true });
+					this.log.debug('alarm is over');
 				}
 			}.bind(this)
 		).catch(
@@ -374,7 +426,7 @@ class Divera247 extends utils.Adapter {
 		// Timeout and self call handling
 		this.refreshStateTimeout = this.refreshStateTimeout || setTimeout(() => {
 			this.refreshStateTimeout = null;
-			this.getDataFromApiAndSetObjects(diveraAccessKey, diveraUserIDs);
+			this.getDataFromApiAndSetObjects(diveraAccessKey, diveraUserIDs, diveraUserGroups);
 		}, this.config.pollIntervall * 1000);
 	}
 

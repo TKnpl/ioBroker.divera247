@@ -1,116 +1,122 @@
 {
-	"common": {
-		"name": "divera247",
-		"version": "0.0.10",
-		"news": {
-			"0.0.10": {
-				"en": "bug in info.connection fixed and handling of user ids expanded",
-				"de": "Fehler in Verbindungsanzeige behoben und Handling von UserIDs erweitert"
-			},
-			"0.0.9": {
-				"en": "added default values for admin page",
-				"de": "Standardwerte für Admin-Seite hinzugefügt"
-			},
-			"0.0.8": {
-				"en": "Changed API call from intervall to timeout, added states 'group' and 'foreign_id'",
-				"de": "Apfrage der API von Intervall auf Timeout geändert, States 'Gruppe' und 'Einsatznummer' hinzugefügt"
-			},
-			"0.0.7": {
-				"en": "added object priority and alarm object updates only in case of an new alarm or when an alarm was closed",
-				"de": "Objekt Priorität/Sonderrechte hinzugefügt und Alarm wird nur noch bei neuem oder Schließung eines Alarms aktualisiert"
-			},
-			"0.0.6": {
-				"en": "state handling while active alarm and connection check improved, fixed object types",
-				"de": "state handling bei aktivem Alarm und connection check verbessert, Fehler bei Objekttypen behoben"
-			},
-			"0.0.5": {
-				"en": "fixed io-package news issue",
-				"de": "io-package news Anforderungen nachgepflegt"
-			},
-			"0.0.4": {
-				"en": "Connection check to api improved, added timestamp of latest alert",
-				"de": "API-Verbindungs-Check verbesserunt, Alarmieringszeitstempel hinzugefügt"
-			},
-			"0.0.3": {
-				"en": "added title, text, address, latitude, longitude, general formatting",
-				"de": "Einsatzstichwort, Meldungstext, Adresse, Längengrad und Breitengrad hinzugefügt"
-			},
-			"0.0.2": {
-				"en": "adjusted translation",
-				"de": "Übersetzung verbessert"
-			},
-			"0.0.1": {
-				"en": "initial release",
-				"de": "Erstveröffentlichung"
-			}
-		},
-		"title": "Divera 24/7",
-		"titleLang": {
-			"en": "Divera 24/7",
-			"de": "Divera 24/7"
-		},
-		"desc": {
-			"en": "Adapter for the alerting software Divera 24/7",
-			"de": "Adapter zur Alarmierungssoftware Divera 24/7"
-		},
-		"authors": [
-			"tknpl <dev@t-concepts.de>"
-		],
-		"author": {
-			"name": "TKnpl",
-			"email": "dev@t-concepts.de"
-		},
-		"keywords": [
-			"divera",
-			"alarm"
-		],
-		"license": "MIT",
-		"platform": "Javascript/Node.js",
-		"main": "main.js",
-		"icon": "divera247.png",
-		"enabled": true,
-		"extIcon": "https://raw.githubusercontent.com/TKnpl/ioBroker.divera247/master/admin/divera247.png",
-		"readme": "https://github.com/TKnpl/ioBroker.divera247/blob/master/README.md",
-		"loglevel": "info",
-		"mode": "daemon",
-		"type": "alarm",
-		"compact": true,
-		"connectionType": "cloud",
-		"dataSource": "poll",
-		"materialize": true,
-		"dependencies": [
-			{
-				"js-controller": ">=2.0.0"
-			}
-		]
-	},
-	"native": {
-		"diveraAccessKey": "",
-		"diveraUserId": "",
-		"pollIntervall": 30
-	},
-	"objects": [],
-	"instanceObjects": [
-		{
-			"_id": "info",
-			"type": "channel",
-			"common": {
-				"name": "Information"
-			},
-			"native": {}
-		},
-		{
-			"_id": "info.connection",
-			"type": "state",
-			"common": {
-				"role": "indicator.connected",
-				"name": "Device or service connected",
-				"type": "boolean",
-				"read": true,
-				"write": false,
-				"def": false
-			},
-			"native": {}
-		}
-	]
+  "common": {
+    "name": "divera247",
+    "version": "0.1.0",
+    "news": {
+      "0.1.0": {
+        "en": "added possibility to specify alarm groups",
+        "de": "Möglichkeit hinzugefügt, nur auf Alarmierungen bestimmter Alarm-Gruppe zu lauschen"
+      },
+      "0.0.10": {
+        "en": "bug in info.connection fixed and handling of user ids expanded",
+        "de": "Fehler in Verbindungsanzeige behoben und Handling von UserIDs erweitert"
+      },
+      "0.0.9": {
+        "en": "added default values for admin page",
+        "de": "Standardwerte für Admin-Seite hinzugefügt"
+      },
+      "0.0.8": {
+        "en": "Changed API call from intervall to timeout, added states 'group' and 'foreign_id'",
+        "de": "Apfrage der API von Intervall auf Timeout geändert, States 'Gruppe' und 'Einsatznummer' hinzugefügt"
+      },
+      "0.0.7": {
+        "en": "added object priority and alarm object updates only in case of an new alarm or when an alarm was closed",
+        "de": "Objekt Priorität/Sonderrechte hinzugefügt und Alarm wird nur noch bei neuem oder Schließung eines Alarms aktualisiert"
+      },
+      "0.0.6": {
+        "en": "state handling while active alarm and connection check improved, fixed object types",
+        "de": "state handling bei aktivem Alarm und connection check verbessert, Fehler bei Objekttypen behoben"
+      },
+      "0.0.5": {
+        "en": "fixed io-package news issue",
+        "de": "io-package news Anforderungen nachgepflegt"
+      },
+      "0.0.4": {
+        "en": "Connection check to api improved, added timestamp of latest alert",
+        "de": "API-Verbindungs-Check verbesserunt, Alarmieringszeitstempel hinzugefügt"
+      },
+      "0.0.3": {
+        "en": "added title, text, address, latitude, longitude, general formatting",
+        "de": "Einsatzstichwort, Meldungstext, Adresse, Längengrad und Breitengrad hinzugefügt"
+      },
+      "0.0.2": {
+        "en": "adjusted translation",
+        "de": "Übersetzung verbessert"
+      },
+      "0.0.1": {
+        "en": "initial release",
+        "de": "Erstveröffentlichung"
+      }
+    },
+    "title": "Divera 24/7",
+    "titleLang": {
+      "en": "Divera 24/7",
+      "de": "Divera 24/7"
+    },
+    "desc": {
+      "en": "Adapter for the alerting software Divera 24/7",
+      "de": "Adapter zur Alarmierungssoftware Divera 24/7"
+    },
+    "authors": [
+      "tknpl <dev@t-concepts.de>"
+    ],
+    "author": {
+      "name": "TKnpl",
+      "email": "dev@t-concepts.de"
+    },
+    "keywords": [
+      "divera",
+      "alarm"
+    ],
+    "license": "MIT",
+    "platform": "Javascript/Node.js",
+    "main": "main.js",
+    "icon": "divera247.png",
+    "enabled": true,
+    "extIcon": "https://raw.githubusercontent.com/TKnpl/ioBroker.divera247/master/admin/divera247.png",
+    "readme": "https://github.com/TKnpl/ioBroker.divera247/blob/master/README.md",
+    "loglevel": "info",
+    "mode": "daemon",
+    "type": "alarm",
+    "compact": true,
+    "connectionType": "cloud",
+    "dataSource": "poll",
+    "materialize": true,
+    "dependencies": [
+      {
+        "js-controller": ">=2.0.0"
+      }
+    ],
+    "installedFrom": "iobroker.divera247@0.0.10"
+  },
+  "native": {
+    "diveraAccessKey": "",
+    "diveraUserId": "",
+    "diveraAlarmGroup": "",
+    "pollIntervall": 30
+  },
+  "objects": [],
+  "instanceObjects": [
+    {
+      "_id": "info",
+      "type": "channel",
+      "common": {
+        "name": "Information"
+      },
+      "native": {}
+    },
+    {
+      "_id": "info.connection",
+      "type": "state",
+      "common": {
+        "role": "indicator.connected",
+        "name": "Device or service connected",
+        "type": "boolean",
+        "read": true,
+        "write": false,
+        "def": false
+      },
+      "native": {}
+    }
+  ]
 }
