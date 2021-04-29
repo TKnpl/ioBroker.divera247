@@ -1,8 +1,12 @@
 {
   "common": {
     "name": "divera247",
-    "version": "0.1.1",
+    "version": "0.1.2",
     "news": {
+      "0.1.2": {
+        "en": "added alarmed vehicles datapointg",
+        "de": "Datenpunkt für alarmierte Fahrzeuge hinzugefügt"
+      },
       "0.1.1": {
         "en": "small changes - wording",
         "de": "Kleine Änderungen in Bezeichnungen"

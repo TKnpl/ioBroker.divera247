@@ -206,6 +206,19 @@ class Divera247 extends utils.Adapter {
 						native: {},
 					});
 
+					// Creating the Object 'addressed_vehicle' -> response JSON key 'data.vehicle'
+					await this.setObjectNotExistsAsync('addressed_vehicle', {
+						type: 'state',
+						common: {
+							name: 'Alarmierte Fahrzeuge',
+							type: 'string',
+							role: 'text',
+							read: true,
+							write: false
+						},
+						native: {},
+					});
+
 					// Creating the Object 'lastUpdate' -> current timestamp
 					await this.setObjectNotExistsAsync('lastUpdate', {
 						type: 'state',
@@ -230,6 +243,7 @@ class Divera247 extends utils.Adapter {
 					await this.setState('priority', { val: null });
 					await this.setState('addressed_users', { val: null });
 					await this.setState('addressed_groups', { val: null });
+					await this.setState('addressed_vehicle', { val: null });
 					await this.setState('lastUpdate', { val: null });
 					await this.setState('alarm', { val: false, ack: true });
 
@@ -342,6 +356,7 @@ class Divera247 extends utils.Adapter {
 								this.setState('priority', { val: content.data.priority, ack: true });
 								this.setState('addressed_users', { val: content.data.ucr_addressed, ack: true });
 								this.setState('addressed_groups', { val: content.data.group, ack: true });
+								this.setState('addressed_vehicle', { val: content.data.vehicle, ack: true });
 								this.setState('alarm', { val: content.success, ack: true });
 								this.log.debug('user is alarmed - states refreshed for the current alarm');
 								userOrGroupFoundAndUpdated = true;
@@ -368,6 +383,7 @@ class Divera247 extends utils.Adapter {
 								this.setState('priority', { val: content.data.priority, ack: true });
 								this.setState('addressed_users', { val: content.data.ucr_addressed, ack: true });
 								this.setState('addressed_groups', { val: content.data.group, ack: true });
+								this.setState('addressed_vehicle', { val: content.data.vehicle, ack: true });
 								this.setState('alarm', { val: content.success, ack: true });
 								this.log.debug('group is alarmed - states refreshed for the current alarm');
 								userOrGroupFoundAndUpdated = true;
@@ -391,6 +407,7 @@ class Divera247 extends utils.Adapter {
 						this.setState('priority', { val: content.data.priority, ack: true });
 						this.setState('addressed_users', { val: content.data.ucr_addressed, ack: true });
 						this.setState('addressed_groups', { val: content.data.group, ack: true });
+						this.setState('addressed_vehicle', { val: content.data.vehicle, ack: true });
 						this.setState('alarm', { val: content.success, ack: true });
 						this.log.debug('states refreshed for the current alarm');
 					}

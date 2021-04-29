@@ -34,6 +34,9 @@ Furthermore please choose an updating interval for calling the API server. 30 se
 
 ## Changelog
 
+### 0.1.2
+* (TKnpl) added alarmed vehicles datapoint
+
 ### 0.1.1
 * (TKnpl) small changes - wording
 
