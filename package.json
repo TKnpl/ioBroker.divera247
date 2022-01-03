@@ -1,27 +1,27 @@
 {
-  "_from": "iobroker.divera247@0.0.10",
-  "_id": "iobroker.divera247@0.0.10",
+  "_from": "iobroker.divera247@0.1.2",
+  "_id": "iobroker.divera247@0.1.2",
   "_inBundle": false,
-  "_integrity": "sha512-PWEIGgQcFLhJgyD2m6NuSpA+EsmnPpvp5U0YhlIk5wW7FGc3k8BymNkC4FPhwO1y9Gjj9DFpq8fiUSDqx/QjOQ==",
+  "_integrity": "sha512-nFW/x7r8xVvA4N8In5YjTBIbOen+4d03Kvd0SlHZ0ERm9Llae8hi2zFkwTPOJIrTSfA4mHE9d1fw/t7xr1/IQg==",
   "_location": "/iobroker.divera247",
   "_phantomChildren": {},
   "_requested": {
     "type": "version",
     "registry": true,
-    "raw": "iobroker.divera247@0.0.10",
+    "raw": "iobroker.divera247@0.1.2",
     "name": "iobroker.divera247",
     "escapedName": "iobroker.divera247",
-    "rawSpec": "0.0.10",
+    "rawSpec": "0.1.2",
     "saveSpec": null,
-    "fetchSpec": "0.0.10"
+    "fetchSpec": "0.1.2"
   },
   "_requiredBy": [
     "#USER",
     "/"
   ],
-  "_resolved": "https://registry.npmjs.org/iobroker.divera247/-/iobroker.divera247-0.0.10.tgz",
-  "_shasum": "c81fe4dfd1b64890d35113265fcb1ae272266612",
-  "_spec": "iobroker.divera247@0.0.10",
+  "_resolved": "https://registry.npmjs.org/iobroker.divera247/-/iobroker.divera247-0.1.2.tgz",
+  "_shasum": "1d91da0d747552853eadacdf740dc33818456a43",
+  "_spec": "iobroker.divera247@0.1.2",
   "_where": "/opt/iobroker",
   "author": {
     "name": "tknpl",
@@ -79,5 +79,5 @@
     "test:package": "mocha test/package --exit",
     "test:unit": "mocha test/unit --exit"
   },
-  "version": "0.1.2"
+  "version": "0.1.3"
 }

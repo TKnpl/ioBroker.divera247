@@ -2,10 +2,15 @@
 
 const utils = require('@iobroker/adapter-core');
 const axios = require('axios');
+const { DH_UNABLE_TO_CHECK_GENERATOR } = require('constants');
 const adapterName = require('./package.json').name.split('.').pop();
 
+let diveraAPIAccessToken = "";
+let diveraMemberships;
 let lastAlarmId = null;
 let lastAlarmStatus = false;
+
+const pollIntervallSeconds = 15;
 
 class Divera247 extends utils.Adapter {
 
@@ -22,16 +27,201 @@ class Divera247 extends utils.Adapter {
 	}
 
 	async onReady() {
-		const diveraAccessKey = this.config.diveraAccessKey;
+		this.setState('info.connection', false, true);
+
+		// Creating the Object 'alarm' -> response JSON key 'success'
+		await this.setObjectNotExistsAsync('alarm', {
+			type: 'state',
+			common: {
+				name: 'Alarm',
+				type: 'boolean',
+				role: 'indicator',
+				read: true,
+				write: false
+			},
+			native: {},
+		});
+
+		// Creating the Object 'title' -> response JSON key 'data.title'
+		await this.setObjectNotExistsAsync('title', {
+			type: 'state',
+			common: {
+				name: 'Einsatzstichwort',
+				type: 'string',
+				role: 'text',
+				read: true,
+				write: false
+			},
+			native: {},
+		});
+
+		// Creating the Object 'title' -> response JSON key 'data.title'
+		await this.setObjectNotExistsAsync('text', {
+			type: 'state',
+			common: {
+				name: 'Meldungstext',
+				type: 'string',
+				role: 'text',
+				read: true,
+				write: false
+			},
+			native: {},
+		});
+
+		// Creating the Object 'foreign_id' -> response JSON key 'data.foreign_id'
+		await this.setObjectNotExistsAsync('foreign_id', {
+			type: 'state',
+			common: {
+				name: 'Einsatznummer',
+				type: 'number',
+				role: 'text',
+				read: true,
+				write: false
+			},
+			native: {},
+		});
+
+		// Creating the Object 'address' -> response JSON key 'data.address'
+		await this.setObjectNotExistsAsync('address', {
+			type: 'state',
+			common: {
+				name: 'Adresse',
+				type: 'string',
+				role: 'text',
+				read: true,
+				write: false
+			},
+			native: {},
+		});
+
+		// Creating the Object 'lat' -> response JSON key 'data.lat'
+		await this.setObjectNotExistsAsync('lat', {
+			type: 'state',
+			common: {
+				name: 'Längengrad',
+				type: 'number',
+				role: 'text',
+				read: true,
+				write: false
+			},
+			native: {},
+		});
+
+		// Creating the Object 'lng' -> response JSON key 'data.lng'
+		await this.setObjectNotExistsAsync('lng', {
+			type: 'state',
+			common: {
+				name: 'Breitengrad',
+				type: 'number',
+				role: 'text',
+				read: true,
+				write: false
+			},
+			native: {},
+		});
+
+		// Creating the Object 'date' -> response JSON key 'data.date'
+		await this.setObjectNotExistsAsync('date', {
+			type: 'state',
+			common: {
+				name: 'Alarmierungszeit',
+				type: 'number',
+				role: 'date',
+				read: true,
+				write: false
+			},
+			native: {},
+		});
+
+		// Creating the Object 'priority' -> response JSON key 'data.priority'
+		await this.setObjectNotExistsAsync('priority', {
+			type: 'state',
+			common: {
+				name: 'Priorität/Sonderrechte',
+				type: 'boolean',
+				role: 'indicator',
+				read: true,
+				write: false
+			},
+			native: {},
+		});
+
+		// Creating the Object 'addressed_users' -> response JSON key 'data.ucr_addressed'
+		await this.setObjectNotExistsAsync('addressed_users', {
+			type: 'state',
+			common: {
+				name: 'Alarmierte Benutzer',
+				type: 'string',
+				role: 'text',
+				read: true,
+				write: false
+			},
+			native: {},
+		});
+
+		// Creating the Object 'addressed_group' -> response JSON key 'data.group'
+		await this.setObjectNotExistsAsync('addressed_groups', {
+			type: 'state',
+			common: {
+				name: 'Alarmierte Gruppen',
+				type: 'string',
+				role: 'text',
+				read: true,
+				write: false
+			},
+			native: {},
+		});
+
+		// Creating the Object 'addressed_vehicle' -> response JSON key 'data.vehicle'
+		await this.setObjectNotExistsAsync('addressed_vehicle', {
+			type: 'state',
+			common: {
+				name: 'Alarmierte Fahrzeuge',
+				type: 'string',
+				role: 'text',
+				read: true,
+				write: false
+			},
+			native: {},
+		});
+
+		// Creating the Object 'lastUpdate' -> current timestamp
+		await this.setObjectNotExistsAsync('lastUpdate', {
+			type: 'state',
+			common: {
+				name: 'Letzte Aktualisierung',
+				type: 'number',
+				role: 'value.time',
+				read: true,
+				write: false
+			},
+			native: {},
+		});
+
+		// Initialisation of the states
+		// await this.setStateAsync('title', { val: null, ack: false });
+		// await this.setStateAsync('text', { val: null, ack: false });
+		// await this.setStateAsync('foreign_id', { val: null, ack: false });
+		// await this.setStateAsync('address', { val: null, ack: false });
+		// await this.setStateAsync('lat', { val: null, ack: false });
+		// await this.setStateAsync('lng', { val: null, ack: false });
+		// await this.setStateAsync('date', { val: null, ack: false });
+		// await this.setStateAsync('priority', { val: null, ack: false });
+		// await this.setStateAsync('addressed_users', { val: null, ack: false });
+		// await this.setStateAsync('addressed_groups', { val: null, ack: false });
+		// await this.setStateAsync('addressed_vehicle', { val: null, ack: false });
+		// await this.setStateAsync('lastUpdate', { val: null, ack: false });
+		// await this.setStateAsync('alarm', { val: false, ack: true });
+
+		////////////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+		const diveraLoginName = this.config.diveraUserLogin;
+		const diveraLoginPassword = this.config.diveraLoginPassword;
+		const diveraFilterOnlyAlarmsForMyUser = this.config.explizitUserAlarms;
 		const diveraUserIdInput = this.config.diveraUserId;
 		const diveraUserGroupInput = this.config.diveraAlarmGroup;
-		const pollIntervallSeconds = this.config.pollIntervall;
-		const pollIntervallSecondsMinimum = 10;
 
 		let diveraUserIDs = diveraUserIdInput.replace(/\s/g, "").split(',');
 		let diveraUserGroups = diveraUserGroupInput.replace(/\s/g, "").split(',');
-
-		this.setState('info.connection', false, true);
 
 		// Check if all values of diveraUserIDs are numbers => valid
 		let userIDInputIsValid = true;
@@ -57,223 +247,51 @@ class Divera247 extends utils.Adapter {
 			}
 		};
 
-		if (diveraAccessKey && pollIntervallSeconds && userIDInputIsValid && userGroupInputIsValid) {
-			if (pollIntervallSeconds >= pollIntervallSecondsMinimum) {
-				if (await this.checkConnectionToApi(diveraAccessKey)) {
-					// Connected to API
-					this.setState('info.connection', true, true);
+		// Startup logic from here. Login and API calls
+		if (diveraLoginName && diveraLoginPassword && pollIntervallSeconds && userIDInputIsValid && userGroupInputIsValid) {
+			if (await this.checkConnectionToApi(diveraLoginName, diveraLoginPassword)) {
+				// Connected to API
+				this.setState('info.connection', true, true);
 
-					// Creating the Object 'alarm' -> response JSON key 'success'
-					await this.setObjectNotExistsAsync('alarm', {
-						type: 'state',
-						common: {
-							name: 'Alarm',
-							type: 'boolean',
-							role: 'indicator',
-							read: true,
-							write: false
-						},
-						native: {},
-					});
-
-					// Creating the Object 'title' -> response JSON key 'data.title'
-					await this.setObjectNotExistsAsync('title', {
-						type: 'state',
-						common: {
-							name: 'Einsatzstichwort',
-							type: 'string',
-							role: 'text',
-							read: true,
-							write: false
-						},
-						native: {},
-					});
-
-					// Creating the Object 'title' -> response JSON key 'data.title'
-					await this.setObjectNotExistsAsync('text', {
-						type: 'state',
-						common: {
-							name: 'Meldungstext',
-							type: 'string',
-							role: 'text',
-							read: true,
-							write: false
-						},
-						native: {},
-					});
-
-					// Creating the Object 'foreign_id' -> response JSON key 'data.foreign_id'
-					await this.setObjectNotExistsAsync('foreign_id', {
-						type: 'state',
-						common: {
-							name: 'Einsatznummer',
-							type: 'number',
-							role: 'text',
-							read: true,
-							write: false
-						},
-						native: {},
-					});
-
-					// Creating the Object 'address' -> response JSON key 'data.address'
-					await this.setObjectNotExistsAsync('address', {
-						type: 'state',
-						common: {
-							name: 'Adresse',
-							type: 'string',
-							role: 'text',
-							read: true,
-							write: false
-						},
-						native: {},
-					});
-
-					// Creating the Object 'lat' -> response JSON key 'data.lat'
-					await this.setObjectNotExistsAsync('lat', {
-						type: 'state',
-						common: {
-							name: 'Längengrad',
-							type: 'number',
-							role: 'text',
-							read: true,
-							write: false
-						},
-						native: {},
-					});
-
-					// Creating the Object 'lng' -> response JSON key 'data.lng'
-					await this.setObjectNotExistsAsync('lng', {
-						type: 'state',
-						common: {
-							name: 'Breitengrad',
-							type: 'number',
-							role: 'text',
-							read: true,
-							write: false
-						},
-						native: {},
-					});
-
-					// Creating the Object 'date' -> response JSON key 'data.date'
-					await this.setObjectNotExistsAsync('date', {
-						type: 'state',
-						common: {
-							name: 'Alarmierungszeit',
-							type: 'number',
-							role: 'date',
-							read: true,
-							write: false
-						},
-						native: {},
-					});
-
-					// Creating the Object 'priority' -> response JSON key 'data.priority'
-					await this.setObjectNotExistsAsync('priority', {
-						type: 'state',
-						common: {
-							name: 'Priorität/Sonderrechte',
-							type: 'boolean',
-							role: 'indicator',
-							read: true,
-							write: false
-						},
-						native: {},
-					});
-
-					// Creating the Object 'addressed_users' -> response JSON key 'data.ucr_addressed'
-					await this.setObjectNotExistsAsync('addressed_users', {
-						type: 'state',
-						common: {
-							name: 'Alarmierte Benutzer',
-							type: 'string',
-							role: 'text',
-							read: true,
-							write: false
-						},
-						native: {},
-					});
-
-					// Creating the Object 'addressed_group' -> response JSON key 'data.group'
-					await this.setObjectNotExistsAsync('addressed_groups', {
-						type: 'state',
-						common: {
-							name: 'Alarmierte Gruppen',
-							type: 'string',
-							role: 'text',
-							read: true,
-							write: false
-						},
-						native: {},
-					});
-
-					// Creating the Object 'addressed_vehicle' -> response JSON key 'data.vehicle'
-					await this.setObjectNotExistsAsync('addressed_vehicle', {
-						type: 'state',
-						common: {
-							name: 'Alarmierte Fahrzeuge',
-							type: 'string',
-							role: 'text',
-							read: true,
-							write: false
-						},
-						native: {},
-					});
-
-					// Creating the Object 'lastUpdate' -> current timestamp
-					await this.setObjectNotExistsAsync('lastUpdate', {
-						type: 'state',
-						common: {
-							name: 'Letzte Aktualisierung',
-							type: 'number',
-							role: 'value.time',
-							read: true,
-							write: false
-						},
-						native: {},
-					});
-
-					// Initialisation of the states
-					await this.setState('title', { val: null });
-					await this.setState('text', { val: null });
-					await this.setState('foreign_id', { val: null });
-					await this.setState('address', { val: null });
-					await this.setState('lat', { val: null });
-					await this.setState('lng', { val: null });
-					await this.setState('date', { val: null });
-					await this.setState('priority', { val: null });
-					await this.setState('addressed_users', { val: null });
-					await this.setState('addressed_groups', { val: null });
-					await this.setState('addressed_vehicle', { val: null });
-					await this.setState('lastUpdate', { val: null });
-					await this.setState('alarm', { val: false, ack: true });
-
-					// Start repeating Call of the API
-					await this.getDataFromApiAndSetObjects(diveraAccessKey, diveraUserIDs, diveraUserGroups);
-				}
+				// Start repeating Call of the API
+				await this.getDataFromApiAndSetObjects(diveraAPIAccessToken, diveraFilterOnlyAlarmsForMyUser, diveraUserIDs, diveraUserGroups);
 			} else {
-				this.log.error('The update interval must be at least ' + pollIntervallSecondsMinimum + ' seconds!');
+				this.log.error('Login to API failed');
 			}
+		} else {
+			this.log.warn('Adapter configuration is invalid');
 		}
 	}
 
 	/*
-	*	Function to check the connection to the API
+	*	Function to login to the API
 	*	returns true / false
+	*	If successful, it is setting diveraAPIAccessToken and diveraMemberships
 	*/
-	checkConnectionToApi(diveraAccessKey) {
-		// Calling the alerting-server api
+	checkConnectionToApi(diveraLoginName, diveraLoginPassword) {
+		// Calling and loggin in into the API V2
 		return axios({
-			method: 'get',
+			method: 'post',
 			baseURL: 'https://www.divera247.com/',
-			url: '/api/last-alarm?accesskey=' + diveraAccessKey,
+			url: '/api/v2/auth/login',
+			data: {
+				Login: {
+					username: diveraLoginName,
+					password: diveraLoginPassword,
+					jwt: false
+				}
+			},
 			responseType: 'json'
 		}).then(
 			function (response) {
-				if (response.status == 200) {
+				const responseBody = response.data;
+
+				if (response.status == 200 && responseBody.success) {
 					this.log.debug('Connected to API');
+					diveraAPIAccessToken = responseBody.data.user.access_token;
+					diveraMemberships = responseBody.data.ucr;
 					return true;
 				} else {
-					this.log.warn('Connection to API failed. Please check your API-Key and try again');
 					return false;
 				}
 			}.bind(this)
@@ -281,13 +299,8 @@ class Divera247 extends utils.Adapter {
 			function (error) {
 				if (error.response) {
 					// The request was made and the server responded with a error status code
-					if (error.response.status == 403) {
-						this.log.error('Access-Token invalid. Please use a valid token!');
-						return false;
-					} else {
-						this.log.warn('received error ' + error.response.status + ' response with content: ' + JSON.stringify(error.response.data));
-						return false;
-					}
+					this.log.error('received error ' + error.response.status + ' response with content: ' + JSON.stringify(error.response.data));
+					return false;
 				} else if (error.request) {
 					// The request was made but no response was received
 					this.log.error(error.message);
@@ -304,12 +317,12 @@ class Divera247 extends utils.Adapter {
 	/*
 	*	Function that calls the API and set the Object States
 	*/
-	async getDataFromApiAndSetObjects(diveraAccessKey, diveraUserIDs, diveraUserGroups) {
+	async getDataFromApiAndSetObjects(diveraAccessKey, diveraFilterOnlyAlarmsForMyUser, diveraUserIDs, diveraUserGroups) {
 		// Calling the alerting-server api
 		await axios({
 			method: 'get',
 			baseURL: 'https://www.divera247.com/',
-			url: '/api/last-alarm?accesskey=' + diveraAccessKey,
+			url: '/api/v2/alarms?accesskey=' + diveraAccessKey,
 			responseType: 'json'
 		}).then(
 			function (response) {
@@ -319,7 +332,7 @@ class Divera247 extends utils.Adapter {
 				this.getState('info.connection', function (err, state) {
 					if (!state.val) {
 						this.setState('info.connection', true, true);
-						this.log.debug('Reconnected to API');
+						this.log.debug('Reconnected to API successfully');
 					}
 				}.bind(this)
 				);
@@ -328,93 +341,96 @@ class Divera247 extends utils.Adapter {
 				this.setState('lastUpdate', { val: Date.now(), ack: true });
 
 				// Setting the alarm specific states when a new alarm is active and addressed to the configured divera user id
-				if (content.success && lastAlarmId != content.data.id) {
-					this.log.debug('Alarm!');
-					this.log.debug('Received data from Divera-API (' + response.status + '): ' + JSON.stringify(content));
+				if (content.success && content.data.items > 0) {
+					let lastAlarmContent = content.data.items[content.data.sorting[0]];
+					if (lastAlarmId != lastAlarmContent.id && !lastAlarmContent.closed) {
+						this.log.debug('Alarm!');
+						this.log.debug('Received data from Divera-API: ' + JSON.stringify(content));
 
-					lastAlarmId = content.data.id;
-					lastAlarmStatus = content.success;
+						lastAlarmId = lastAlarmContent.id;
+						lastAlarmStatus = !lastAlarmContent.closed;
 
-					// Checking for specified userIDs or groups - helper variables
-					let userOrGroupFoundAndUpdated = false;
-					let userIDsAvailable = false;
-					let groupsAvailable = false;
+						// Checking for specified userIDs or groups - helper variables
+						let userOrGroupFoundAndUpdated = false;
+						let userIDsAvailable = false;
+						let groupsAvailable = false;
 
-					// Checking if userIDs are specified and alarmed
-					if (diveraUserIDs.length > 0 && diveraUserIDs != "") {
-						userIDsAvailable = true;
-						for (let elm of diveraUserIDs) {
-							this.log.debug('checking if user \'' + elm + '\' is alarmed');
-							if (content.data.ucr_addressed.includes(parseInt(elm, 10))) {
-								this.setState('title', { val: content.data.title, ack: true });
-								this.setState('text', { val: content.data.text, ack: true });
-								this.setState('foreign_id', { val: content.data.foreign_id, ack: true });
-								this.setState('address', { val: content.data.address, ack: true });
-								this.setState('lat', { val: content.data.lat, ack: true });
-								this.setState('lng', { val: content.data.lng, ack: true });
-								this.setState('date', { val: content.data.date * 1000, ack: true });
-								this.setState('priority', { val: content.data.priority, ack: true });
-								this.setState('addressed_users', { val: content.data.ucr_addressed, ack: true });
-								this.setState('addressed_groups', { val: content.data.group, ack: true });
-								this.setState('addressed_vehicle', { val: content.data.vehicle, ack: true });
-								this.setState('alarm', { val: content.success, ack: true });
-								this.log.debug('user is alarmed - states refreshed for the current alarm');
-								userOrGroupFoundAndUpdated = true;
-								break;
-							} else {
-								this.log.debug('user is not alarmed');
+						// Checking if userIDs are specified and alarmed
+						if (diveraUserIDs.length > 0 && diveraUserIDs != "") {
+							userIDsAvailable = true;
+							for (let elm of diveraUserIDs) {
+								this.log.debug('checking if user \'' + elm + '\' is alarmed');
+								if (lastAlarmContent.ucr_addressed.includes(parseInt(elm, 10))) {
+									this.setState('title', { val: lastAlarmContent.title, ack: true });
+									this.setState('text', { val: lastAlarmContent.text, ack: true });
+									this.setState('foreign_id', { val: lastAlarmContent.foreign_id, ack: true });
+									this.setState('address', { val: lastAlarmContent.address, ack: true });
+									this.setState('lat', { val: lastAlarmContent.lat, ack: true });
+									this.setState('lng', { val: lastAlarmContent.lng, ack: true });
+									this.setState('date', { val: lastAlarmContent.date * 1000, ack: true });
+									this.setState('priority', { val: lastAlarmContent.priority, ack: true });
+									this.setState('addressed_users', { val: lastAlarmContent.ucr_addressed, ack: true });
+									this.setState('addressed_groups', { val: lastAlarmContent.group, ack: true });
+									this.setState('addressed_vehicle', { val: lastAlarmContent.vehicle, ack: true });
+									this.setState('alarm', { val: content.success, ack: true });
+									this.log.debug('user is alarmed - states refreshed for the current alarm');
+									userOrGroupFoundAndUpdated = true;
+									break;
+								} else {
+									this.log.debug('user is not alarmed');
+								}
 							}
 						}
-					}
 
-					// Checking if groups are specified and alarmed
-					if (diveraUserGroups.length > 0 && diveraUserGroups != "" && !userOrGroupFoundAndUpdated) {
-						groupsAvailable = true;
-						for (let elm of diveraUserGroups) {
-							this.log.debug('checking if group \'' + elm + '\' is alarmed');
-							if (content.data.group.includes(parseInt(elm, 10))) {
-								this.setState('title', { val: content.data.title, ack: true });
-								this.setState('text', { val: content.data.text, ack: true });
-								this.setState('foreign_id', { val: content.data.foreign_id, ack: true });
-								this.setState('address', { val: content.data.address, ack: true });
-								this.setState('lat', { val: content.data.lat, ack: true });
-								this.setState('lng', { val: content.data.lng, ack: true });
-								this.setState('date', { val: content.data.date * 1000, ack: true });
-								this.setState('priority', { val: content.data.priority, ack: true });
-								this.setState('addressed_users', { val: content.data.ucr_addressed, ack: true });
-								this.setState('addressed_groups', { val: content.data.group, ack: true });
-								this.setState('addressed_vehicle', { val: content.data.vehicle, ack: true });
-								this.setState('alarm', { val: content.success, ack: true });
-								this.log.debug('group is alarmed - states refreshed for the current alarm');
-								userOrGroupFoundAndUpdated = true;
-								break;
-							} else {
-								this.log.debug('group is not alarmed');
+						// Checking if groups are specified and alarmed
+						if (diveraUserGroups.length > 0 && diveraUserGroups != "" && !userOrGroupFoundAndUpdated) {
+							groupsAvailable = true;
+							for (let elm of diveraUserGroups) {
+								this.log.debug('checking if group \'' + elm + '\' is alarmed');
+								if (lastAlarmContent.group.includes(parseInt(elm, 10))) {
+									this.setState('title', { val: lastAlarmContent.title, ack: true });
+									this.setState('text', { val: lastAlarmContent.text, ack: true });
+									this.setState('foreign_id', { val: lastAlarmContent.foreign_id, ack: true });
+									this.setState('address', { val: lastAlarmContent.address, ack: true });
+									this.setState('lat', { val: lastAlarmContent.lat, ack: true });
+									this.setState('lng', { val: lastAlarmContent.lng, ack: true });
+									this.setState('date', { val: lastAlarmContent.date * 1000, ack: true });
+									this.setState('priority', { val: lastAlarmContent.priority, ack: true });
+									this.setState('addressed_users', { val: lastAlarmContent.ucr_addressed, ack: true });
+									this.setState('addressed_groups', { val: lastAlarmContent.group, ack: true });
+									this.setState('addressed_vehicle', { val: lastAlarmContent.vehicle, ack: true });
+									this.setState('alarm', { val: content.success, ack: true });
+									this.log.debug('group is alarmed - states refreshed for the current alarm');
+									userOrGroupFoundAndUpdated = true;
+									break;
+								} else {
+									this.log.debug('group is not alarmed');
+								}
 							}
 						}
-					}
 
-					// Updating states if no userID or group is specified
-					if (!userIDsAvailable && !groupsAvailable) {
-						this.log.debug('userID and group check skipped as of no userID or group is specified');
-						this.setState('title', { val: content.data.title, ack: true });
-						this.setState('text', { val: content.data.text, ack: true });
-						this.setState('foreign_id', { val: content.data.foreign_id, ack: true });
-						this.setState('address', { val: content.data.address, ack: true });
-						this.setState('lat', { val: content.data.lat, ack: true });
-						this.setState('lng', { val: content.data.lng, ack: true });
-						this.setState('date', { val: content.data.date * 1000, ack: true });
-						this.setState('priority', { val: content.data.priority, ack: true });
-						this.setState('addressed_users', { val: content.data.ucr_addressed, ack: true });
-						this.setState('addressed_groups', { val: content.data.group, ack: true });
-						this.setState('addressed_vehicle', { val: content.data.vehicle, ack: true });
-						this.setState('alarm', { val: content.success, ack: true });
-						this.log.debug('states refreshed for the current alarm');
+						// Updating states if no userID or group is specified
+						if (!userIDsAvailable && !groupsAvailable) {
+							this.log.debug('userID and group check skipped as of no userID or group is specified');
+							this.setState('title', { val: lastAlarmContent.title, ack: true });
+							this.setState('text', { val: lastAlarmContent.text, ack: true });
+							this.setState('foreign_id', { val: lastAlarmContent.foreign_id, ack: true });
+							this.setState('address', { val: lastAlarmContent.address, ack: true });
+							this.setState('lat', { val: lastAlarmContent.lat, ack: true });
+							this.setState('lng', { val: lastAlarmContent.lng, ack: true });
+							this.setState('date', { val: lastAlarmContent.date * 1000, ack: true });
+							this.setState('priority', { val: lastAlarmContent.priority, ack: true });
+							this.setState('addressed_users', { val: lastAlarmContent.ucr_addressed, ack: true });
+							this.setState('addressed_groups', { val: lastAlarmContent.group, ack: true });
+							this.setState('addressed_vehicle', { val: lastAlarmContent.vehicle, ack: true });
+							this.setState('alarm', { val: content.success, ack: true });
+							this.log.debug('states refreshed for the current alarm');
+						}
+					} else if (lastAlarmId == lastAlarmContent.id && lastAlarmContent.closed) {
+						this.setState('alarm', { val: !lastAlarmContent.closed, ack: true });
+						this.log.debug('alarm is over');
+						lastAlarmStatus = !lastAlarmContent.closed;
 					}
-				} else if (content.success != lastAlarmStatus) {
-					lastAlarmStatus = content.success;
-					this.setState('alarm', { val: content.success, ack: true });
-					this.log.debug('alarm is over');
 				}
 			}.bind(this)
 		).catch(
@@ -422,7 +438,7 @@ class Divera247 extends utils.Adapter {
 				if (error.response) {
 					// The request was made and the server responded with a error status code
 					if (error.response.status == 403) {
-						this.log.error('Access-Token has been invalid. Please use a valid token!');
+						this.log.error('Login not possible');
 						this.setState('info.connection', false, true);
 					} else {
 						this.log.warn('received error ' + error.response.status + ' response with content: ' + JSON.stringify(error.response.data));
@@ -444,7 +460,7 @@ class Divera247 extends utils.Adapter {
 		this.refreshStateTimeout = this.refreshStateTimeout || setTimeout(() => {
 			this.refreshStateTimeout = null;
 			this.getDataFromApiAndSetObjects(diveraAccessKey, diveraUserIDs, diveraUserGroups);
-		}, this.config.pollIntervall * 1000);
+		}, pollIntervallSeconds * 1000);
 	}
 
 	// Is called when adapter shuts down

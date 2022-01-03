@@ -14,41 +14,53 @@ systemDictionary = {
 		"pl": "Ustawienia adaptera divera247",
 		"zh-cn": "divera247适配器设置"
 	},
-	"API-Key": {
-		"en": "API-Key",
-		"de": "API-Key",
-		"ru": "API-ключ",
-		"pt": "Chave API",
-		"nl": "API sleutel",
-		"fr": "Clé API",
-		"it": "Chiave API",
-		"es": "Clave API",
-		"pl": "Klucz API",
-		"zh-cn": "API密钥"
+	"Email address": {
+		"en": "Email address",
+		"de": "E-Mail Addresse",
+		"ru": "Адрес электронной почты",
+		"pt": "Endereço de e-mail",
+		"nl": "E-mailadres",
+		"fr": "Adresse e-mail",
+		"it": "Indirizzo email",
+		"es": "Dirección de correo electrónico",
+		"pl": "Adres e-mail",
+		"zh-cn": "电子邮件地址"
 	},
-	"API-Key for your Divera 24 / 7 organisation": {
-		"en": "API-Key for your Divera 24 / 7 organisation",
-		"de": "API-Key für Ihre Divera 24/7 Einheit",
-		"ru": "API-ключ для вашей организации Divera 24/7",
-		"pt": "Chave API para sua organização Divera 24/7",
-		"nl": "API-Key voor uw Divera 24/7 organisatie",
-		"fr": "Clé API pour votre organisation Divera 24/7",
-		"it": "Chiave API per la tua organizzazione Divera 24 ore su 24, 7 giorni su 7",
-		"es": "API-Key para su organización Divera 24/7",
-		"pl": "Klucz API dla Twojej organizacji Divera 24/7",
-		"zh-cn": "适用于Divera 24/7组织的API密钥"
+	"Divera login password": {
+		"en": "Divera login password",
+		"de": "Divera Login Passwort",
+		"ru": "Пароль для входа в Divera",
+		"pt": "Senha de login Divera",
+		"nl": "Divera inlogwachtwoord",
+		"fr": "Mot de passe de connexion Divera",
+		"it": "Password di accesso Divera",
+		"es": "Contraseña de inicio de sesión de Divera",
+		"pl": "Hasło logowania Divera",
+		"zh-cn": "Divera 登录密码"
 	},
-	"Configuration help": {
-		"en": "Configuration help",
-		"de": "Konfigurationshilfe",
-		"ru": "Помощь в настройке",
-		"pt": "Ajuda de configuração",
-		"nl": "Configuratiehulp",
-		"fr": "Aide à la configuration",
-		"it": "Guida alla configurazione",
-		"es": "Ayuda de configuración",
-		"pl": "Pomoc w konfiguracji",
-		"zh-cn": "配置帮助"
+	"Show only alarms for my user": {
+		"en": "Show only alarms for my user",
+		"de": "Nur Alarme für meinen Benutzer anzeigen",
+		"ru": "Показывать только будильники для моего пользователя",
+		"pt": "Mostrar apenas alarmes para meu usuário",
+		"nl": "Toon alleen alarmen voor mijn gebruiker",
+		"fr": "Afficher uniquement les alarmes pour mon utilisateur",
+		"it": "Mostra solo allarmi per il mio utente",
+		"es": "Mostrar solo alarmas para mi usuario",
+		"pl": "Pokaż tylko alarmy dla mojego użytkownika",
+		"zh-cn": "仅显示我的用户的警报"
+	},
+	"Alarm will triggers only if my username is included in the alarm": {
+		"en": "Alarm will triggers only if my username is included in the alarm",
+		"de": "Der Alarm wird nur ausgelöst, wenn mein Benutzername in der Alarmierung enthalten ist",
+		"ru": "Тревога сработает только в том случае, если мое имя пользователя включено в тревогу",
+		"pt": "O alarme disparará apenas se meu nome de usuário estiver incluído no alarme",
+		"nl": "Alarm wordt alleen geactiveerd als mijn gebruikersnaam is opgenomen in het alarm",
+		"fr": "L'alarme ne se déclenchera que si mon nom d'utilisateur est inclus dans l'alarme",
+		"it": "L'allarme si attiva solo se il mio nome utente è incluso nell'allarme",
+		"es": "La alarma se activará solo si mi nombre de usuario está incluido en la alarma",
+		"pl": "Alarm uruchomi się tylko wtedy, gdy moja nazwa użytkownika jest uwzględniona w alarmie",
+		"zh-cn": "只有当我的用户名包含在警报中时，警报才会触发"
 	},
 	"Divera user IDs": {
 		"en": "Divera user IDs",
@@ -76,7 +88,7 @@ systemDictionary = {
 	},
 	"(leave blank to subscribe all alarms)": {
 		"en": "(leave blank to subscribe all alarms)",
-		"de": "(Leer lassen, um alle Alarme zu abonnieren)",
+		"de": "(Leer lassen, um alle Alarme zu erhalten)",
 		"ru": "(оставьте поле пустым, чтобы подписаться на все будильники)",
 		"pt": "(deixe em branco para inscrever todos os alarmes)",
 		"nl": "(laat dit veld leeg om alle alarmen te abonneren)",
@@ -109,29 +121,5 @@ systemDictionary = {
 		"es": "Alarma solo para los siguientes grupos de alarmas de Divera",
 		"pl": "Alarm tylko dla następujących grup alarmowych Divera",
 		"zh-cn": "仅针对以下Divera警报组发出警报"
-	},
-	"update interval (seconds)": {
-		"en": "update interval (seconds)",
-		"de": "Aktualisierungsintervall (Sekunden)",
-		"ru": "интервал обновления (секунды)",
-		"pt": "intervalo de atualização (segundos)",
-		"nl": "update-interval (seconden)",
-		"fr": "intervalle de mise à jour (secondes)",
-		"it": "intervallo di aggiornamento (secondi)",
-		"es": "intervalo de actualización (segundos)",
-		"pl": "interwał aktualizacji (sekundy)",
-		"zh-cn": "更新间隔（秒）"
-	},
-	"minimum 10 seconds": {
-		"en": "minimum 10 seconds",
-		"de": "Minimum 10 Sekunden",
-		"ru": "минимум 10 секунд",
-		"pt": "mínimo 10 segundos",
-		"nl": "minimaal 10 seconden",
-		"fr": "minimum 10 secondes",
-		"it": "minimo 10 secondi",
-		"es": "mínimo 10 segundos",
-		"pl": "minimum 10 sekund",
-		"zh-cn": "最少10秒"
 	}
 };

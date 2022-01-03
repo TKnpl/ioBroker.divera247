@@ -1,8 +1,12 @@
 {
   "common": {
     "name": "divera247",
-    "version": "0.1.2",
+    "version": "0.1.3",
     "news": {
+      "0.1.3": {
+        "en": "general revision of the adapter",
+        "de": "Generelle Überarbeitung des Adapters"
+      },
       "0.1.2": {
         "en": "added alarmed vehicles datapointg",
         "de": "Datenpunkt für alarmierte Fahrzeuge hinzugefügt"
@@ -94,7 +98,8 @@
       {
         "js-controller": ">=2.0.0"
       }
-    ]
+    ],
+    "installedFrom": "iobroker.divera247@0.1.2"
   },
   "native": {
     "diveraAccessKey": "",
