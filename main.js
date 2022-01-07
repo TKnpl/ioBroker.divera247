@@ -341,7 +341,7 @@ class Divera247 extends utils.Adapter {
 				this.setState('lastUpdate', { val: Date.now(), ack: true });
 
 				// Setting the alarm specific states when a new alarm is active and addressed to the configured divera user id
-				if (content.success && content.data.items > 0) {
+				if (content.success && Object.keys(content.data.items).length > 0) {
 					let lastAlarmContent = content.data.items[content.data.sorting[0]];
 					if (lastAlarmId != lastAlarmContent.id && !lastAlarmContent.closed) {
 						this.log.debug('Alarm!');
@@ -428,7 +428,7 @@ class Divera247 extends utils.Adapter {
 						}
 					} else if (lastAlarmId == lastAlarmContent.id && lastAlarmContent.closed) {
 						this.setState('alarm', { val: !lastAlarmContent.closed, ack: true });
-						this.log.debug('alarm is over');
+						this.log.debug('alarm is closed');
 						lastAlarmStatus = !lastAlarmContent.closed;
 					}
 				}
