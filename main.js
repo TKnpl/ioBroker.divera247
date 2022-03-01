@@ -346,7 +346,6 @@ class Divera247 extends utils.Adapter {
 					if (lastAlarmId != lastAlarmContent.id && !lastAlarmContent.closed) {
 						this.log.debug('Alarm!');
 						this.log.debug('Received data from Divera-API: ' + JSON.stringify(content));
-						this.getMembershipIds();
 
 						lastAlarmId = lastAlarmContent.id;
 						alarmIsActive = !lastAlarmContent.closed;
@@ -371,8 +370,8 @@ class Divera247 extends utils.Adapter {
 						}
 
 						// Checking if userIDs are specified and alarmed
-						if (diveraUserIDs.length > 0 && diveraUserIDs != "" && !adapterStatesRefreshedForThisAlarm) {
-							for (let elm of diveraUserIDs) {
+						if (this.diveraUserIDs.length > 0 && this.diveraUserIDs[0] != "" && !adapterStatesRefreshedForThisAlarm) {
+							for (let elm of this.diveraUserIDs) {
 								this.log.debug('checking if user \'' + elm + '\' is alarmed');
 								if (lastAlarmContent.ucr_addressed.includes(parseInt(elm, 10))) {
 									this.setAdapterStates(lastAlarmContent);
@@ -386,8 +385,8 @@ class Divera247 extends utils.Adapter {
 						}
 
 						// Checking if groups are specified and alarmed
-						if (diveraUserGroups.length > 0 && diveraUserGroups != "" && !adapterStatesRefreshedForThisAlarm) {
-							for (let elm of diveraUserGroups) {
+						if (this.diveraUserGroups.length > 0 && this.diveraUserGroups[0] != "" && !adapterStatesRefreshedForThisAlarm) {
+							for (let elm of this.diveraUserGroups) {
 								this.log.debug('checking if group \'' + elm + '\' is alarmed');
 								if (lastAlarmContent.group.includes(parseInt(elm, 10))) {
 									this.setAdapterStates(lastAlarmContent);
@@ -464,6 +463,7 @@ class Divera247 extends utils.Adapter {
 		diveraMemberships.forEach(element => {
 			memberShipIDs.push(element.id);
 		});
+		this.log.debug('memberShipIDs: ' + JSON.stringify(memberShipIDs));
 		return memberShipIDs
 	}
 
