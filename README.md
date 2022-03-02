@@ -77,7 +77,7 @@ Furthermore please choose an updating interval for calling the API server. 30 se
 ## License
 MIT License
 
-Copyright (c) 2021 TKnpl <dev@t-concepts.de>
+Copyright (c) 2022 TKnpl <dev@t-concepts.de>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
