@@ -5,7 +5,7 @@ const axios = require('axios');
 const adapterName = require('./package.json').name.split('.').pop();
 
 let diveraAPIAccessToken = '';
-let diveraMemberships;
+let diveraMemberships = [];
 let lastAlarmId = null;
 let alarmIsActive = false;
 
@@ -236,6 +236,7 @@ class Divera247 extends utils.Adapter {
 					this.log.debug('Connected to API');
 					diveraAPIAccessToken = responseBody.data.user.access_token;
 					diveraMemberships = responseBody.data.ucr;
+					this.log.debug('Divera Memberships: ' + JSON.stringify(diveraMemberships));
 					return true;
 				} else {
 					return false;
@@ -306,10 +307,9 @@ class Divera247 extends utils.Adapter {
 
 						// Checking if only user alarms should be displayed
 						if (diveraFilterOnlyAlarmsForMyUser) {
-							const myDiveraUserIDs = this.getMembershipIds();
-							for (const elm of myDiveraUserIDs) {
-								this.log.debug('checking if my user-id \'' + elm + '\' is alarmed');
-								if (lastAlarmContent.ucr_addressed.includes(parseInt(elm, 10))) {
+							for (const elm of diveraMemberships) {
+								this.log.debug('checking if my user-id \'' + elm.id + '\' for \'' + elm.name + '\' is alarmed');
+								if (lastAlarmContent.ucr_addressed.includes(parseInt(elm.id, 10))) {
 									this.setAdapterStates(lastAlarmContent);
 									this.log.debug('my user is alarmed - states refreshed for the current alarm');
 									adapterStatesRefreshedForThisAlarm = true;
@@ -321,8 +321,8 @@ class Divera247 extends utils.Adapter {
 						}
 
 						// Checking if userIDs are specified and alarmed
-						if (this.diveraUserIDs.length > 0 && this.diveraUserIDs[0] != '' && !adapterStatesRefreshedForThisAlarm) {
-							for (const elm of this.diveraUserIDs) {
+						if (diveraUserIDs.length > 0 && diveraUserIDs[0] != '' && !adapterStatesRefreshedForThisAlarm) {
+							for (const elm of diveraUserIDs) {
 								this.log.debug('checking if user \'' + elm + '\' is alarmed');
 								if (lastAlarmContent.ucr_addressed.includes(parseInt(elm, 10))) {
 									this.setAdapterStates(lastAlarmContent);
@@ -336,8 +336,8 @@ class Divera247 extends utils.Adapter {
 						}
 
 						// Checking if groups are specified and alarmed
-						if (this.diveraUserGroups.length > 0 && this.diveraUserGroups[0] != '' && !adapterStatesRefreshedForThisAlarm) {
-							for (const elm of this.diveraUserGroups) {
+						if (diveraUserGroups.length > 0 && diveraUserGroups[0] != '' && !adapterStatesRefreshedForThisAlarm) {
+							for (const elm of diveraUserGroups) {
 								this.log.debug('checking if group \'' + elm + '\' is alarmed');
 								if (lastAlarmContent.group.includes(parseInt(elm, 10))) {
 									this.setAdapterStates(lastAlarmContent);
@@ -411,15 +411,6 @@ class Divera247 extends utils.Adapter {
 		this.setState('addressed_groups', { val: alarmData.group.join(), ack: true });
 		this.setState('addressed_vehicle', { val: alarmData.vehicle.join(), ack: true });
 		this.setState('alarm', { val: true, ack: true });
-	}
-
-	getMembershipIds() {
-		const memberShipIDs = [];
-		diveraMemberships.forEach(element => {
-			memberShipIDs.push(element.id);
-		});
-		this.log.debug('memberShipIDs: ' + JSON.stringify(memberShipIDs));
-		return memberShipIDs;
 	}
 
 	// Is called when adapter shuts down
