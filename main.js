@@ -2,10 +2,9 @@
 
 const utils = require('@iobroker/adapter-core');
 const axios = require('axios');
-const { DH_UNABLE_TO_CHECK_GENERATOR } = require('constants');
 const adapterName = require('./package.json').name.split('.').pop();
 
-let diveraAPIAccessToken = "";
+let diveraAPIAccessToken = '';
 let diveraMemberships;
 let lastAlarmId = null;
 let alarmIsActive = false;
