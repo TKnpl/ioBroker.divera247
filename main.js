@@ -81,6 +81,19 @@ class Divera247 extends utils.Adapter {
 			native: {},
 		});
 
+		// Creating the Object 'divera_id' -> response JSON key 'data.id'
+		await this.setObjectNotExistsAsync('divera_id', {
+			type: 'state',
+			common: {
+				name: 'Einsatz ID',
+				type: 'number',
+				role: 'text',
+				read: true,
+				write: false
+			},
+			native: {},
+		});
+
 		// Creating the Object 'address' -> response JSON key 'data.address'
 		await this.setObjectNotExistsAsync('address', {
 			type: 'state',
@@ -191,27 +204,12 @@ class Divera247 extends utils.Adapter {
 			common: {
 				name: 'Letzte Aktualisierung',
 				type: 'number',
-				role: 'value.time',
+				role: 'date',
 				read: true,
 				write: false
 			},
 			native: {},
 		});
-
-		// Initialisation of the states
-		// await this.setStateAsync('title', { val: null, ack: false });
-		// await this.setStateAsync('text', { val: null, ack: false });
-		// await this.setStateAsync('foreign_id', { val: null, ack: false });
-		// await this.setStateAsync('address', { val: null, ack: false });
-		// await this.setStateAsync('lat', { val: null, ack: false });
-		// await this.setStateAsync('lng', { val: null, ack: false });
-		// await this.setStateAsync('date', { val: null, ack: false });
-		// await this.setStateAsync('priority', { val: null, ack: false });
-		// await this.setStateAsync('addressed_users', { val: null, ack: false });
-		// await this.setStateAsync('addressed_groups', { val: null, ack: false });
-		// await this.setStateAsync('addressed_vehicle', { val: null, ack: false });
-		// await this.setStateAsync('lastUpdate', { val: null, ack: false });
-		// await this.setStateAsync('alarm', { val: false, ack: true });
 
 		////////////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 		const diveraLoginName = this.config.diveraUserLogin;
@@ -220,32 +218,32 @@ class Divera247 extends utils.Adapter {
 		const diveraUserIdInput = this.config.diveraUserId;
 		const diveraUserGroupInput = this.config.diveraAlarmGroup;
 
-		let diveraUserIDs = diveraUserIdInput.replace(/\s/g, "").split(',');
-		let diveraUserGroups = diveraUserGroupInput.replace(/\s/g, "").split(',');
+		const diveraUserIDs = diveraUserIdInput.replace(/\s/g, '').split(',');
+		const diveraUserGroups = diveraUserGroupInput.replace(/\s/g, '').split(',');
 
 		// Check if all values of diveraUserIDs are numbers => valid
 		let userIDInputIsValid = true;
-		if (diveraUserIDs.length > 0 && diveraUserIDs[0] != "") {
-			for (let userIDfromInput of diveraUserIDs) {
-				if (isNaN(userIDfromInput)) {
-					this.log.error('UserID \'' + userIDfromInput + '\' is not a Number')
+		if (diveraUserIDs.length > 0 && diveraUserIDs[0] != '') {
+			for (const userIDfromInput of diveraUserIDs) {
+				if (isNaN(Number(userIDfromInput))) {
+					this.log.error('UserID \'' + userIDfromInput + '\' is not a Number');
 					userIDInputIsValid = false;
 					break;
 				}
 			}
-		};
+		}
 
 		// Check if all values of diveraUserGroups are numbers => valid
 		let userGroupInputIsValid = true;
-		if (diveraUserGroups.length > 0 && diveraUserGroups[0] != "") {
-			for (let userGroupfromInput of diveraUserGroups) {
-				if (isNaN(userGroupfromInput)) {
-					this.log.error('UserGroup \'' + userGroupfromInput + '\' is not a Number')
+		if (diveraUserGroups.length > 0 && diveraUserGroups[0] != '') {
+			for (const userGroupfromInput of diveraUserGroups) {
+				if (isNaN(Number(userGroupfromInput))) {
+					this.log.error('UserGroup \'' + userGroupfromInput + '\' is not a Number');
 					userGroupInputIsValid = false;
 					break;
 				}
 			}
-		};
+		}
 
 		// Startup logic from here. Login and API calls
 		if (diveraLoginName && diveraLoginPassword && pollIntervallSeconds && userIDInputIsValid && userGroupInputIsValid) {
@@ -263,11 +261,14 @@ class Divera247 extends utils.Adapter {
 		}
 	}
 
-	/*
-	*	Function to login to the API
-	*	returns true / false
-	*	If successful, it is setting diveraAPIAccessToken and diveraMemberships
-	*/
+	/**
+	 *	Function to login to the API
+	 *	returns true / false
+	 *	If successful, it is setting diveraAPIAccessToken and diveraMemberships
+	 *
+	 * @param {string} diveraLoginName
+	 * @param {string} diveraLoginPassword
+	 */
 	checkConnectionToApi(diveraLoginName, diveraLoginPassword) {
 		// Calling and loggin in into the API V2
 		return axios({
@@ -311,12 +312,17 @@ class Divera247 extends utils.Adapter {
 					return false;
 				}
 			}.bind(this)
-		)
+		);
 	}
 
-	/*
-	*	Function that calls the API and set the Object States
-	*/
+	/**
+	 *	Function that calls the API and set the Object States
+	 *
+	 * @param {string} diveraAccessKey
+	 * @param {boolean} diveraFilterOnlyAlarmsForMyUser
+	 * @param {string[]} diveraUserIDs
+	 * @param {string[]} diveraUserGroups
+	 */
 	async getDataFromApiAndSetObjects(diveraAccessKey, diveraFilterOnlyAlarmsForMyUser, diveraUserIDs, diveraUserGroups) {
 		// Calling the alerting-server api
 		await axios({
@@ -328,7 +334,7 @@ class Divera247 extends utils.Adapter {
 			function (response) {
 				const content = response.data;
 
-				// If last request failed set info.connection true again 
+				// If last request failed set info.connection true again
 				this.getState('info.connection', function (err, state) {
 					if (!state.val) {
 						this.setState('info.connection', true, true);
@@ -342,7 +348,7 @@ class Divera247 extends utils.Adapter {
 
 				// Setting the alarm specific states when a new alarm is active and addressed to the configured divera user id
 				if (content.success && Object.keys(content.data.items).length > 0) {
-					let lastAlarmContent = content.data.items[content.data.sorting[0]];
+					const lastAlarmContent = content.data.items[content.data.sorting[0]];
 					if (lastAlarmId != lastAlarmContent.id && !lastAlarmContent.closed) {
 						this.log.debug('Alarm!');
 						this.log.debug('Received data from Divera-API: ' + JSON.stringify(content));
@@ -355,8 +361,8 @@ class Divera247 extends utils.Adapter {
 
 						// Checking if only user alarms should be displayed
 						if (diveraFilterOnlyAlarmsForMyUser) {
-							let myDiveraUserIDs = this.getMembershipIds();
-							for (let elm of myDiveraUserIDs) {
+							const myDiveraUserIDs = this.getMembershipIds();
+							for (const elm of myDiveraUserIDs) {
 								this.log.debug('checking if my user-id \'' + elm + '\' is alarmed');
 								if (lastAlarmContent.ucr_addressed.includes(parseInt(elm, 10))) {
 									this.setAdapterStates(lastAlarmContent);
@@ -370,8 +376,8 @@ class Divera247 extends utils.Adapter {
 						}
 
 						// Checking if userIDs are specified and alarmed
-						if (this.diveraUserIDs.length > 0 && this.diveraUserIDs[0] != "" && !adapterStatesRefreshedForThisAlarm) {
-							for (let elm of this.diveraUserIDs) {
+						if (this.diveraUserIDs.length > 0 && this.diveraUserIDs[0] != '' && !adapterStatesRefreshedForThisAlarm) {
+							for (const elm of this.diveraUserIDs) {
 								this.log.debug('checking if user \'' + elm + '\' is alarmed');
 								if (lastAlarmContent.ucr_addressed.includes(parseInt(elm, 10))) {
 									this.setAdapterStates(lastAlarmContent);
@@ -385,8 +391,8 @@ class Divera247 extends utils.Adapter {
 						}
 
 						// Checking if groups are specified and alarmed
-						if (this.diveraUserGroups.length > 0 && this.diveraUserGroups[0] != "" && !adapterStatesRefreshedForThisAlarm) {
-							for (let elm of this.diveraUserGroups) {
+						if (this.diveraUserGroups.length > 0 && this.diveraUserGroups[0] != '' && !adapterStatesRefreshedForThisAlarm) {
+							for (const elm of this.diveraUserGroups) {
 								this.log.debug('checking if group \'' + elm + '\' is alarmed');
 								if (lastAlarmContent.group.includes(parseInt(elm, 10))) {
 									this.setAdapterStates(lastAlarmContent);
@@ -433,24 +439,28 @@ class Divera247 extends utils.Adapter {
 					this.setState('info.connection', false, true);
 				}
 			}.bind(this)
-		)
+		);
 
 		// Timeout and self call handling
 		this.refreshStateTimeout = this.refreshStateTimeout || setTimeout(() => {
 			this.refreshStateTimeout = null;
-			this.getDataFromApiAndSetObjects(diveraAccessKey, diveraUserIDs, diveraUserGroups);
+			this.getDataFromApiAndSetObjects(diveraAccessKey, diveraFilterOnlyAlarmsForMyUser, diveraUserIDs, diveraUserGroups);
 		}, pollIntervallSeconds * 1000);
 	}
 
 	// Function to set satates
+	/**
+	 * @param {{ title: string; text: string; foreign_id: number; id: number; address: string; lat: number; lng: number; date: number; priority: boolean; ucr_addressed: string[]; group: string[]; vehicle: string[]; }} alarmData
+	 */
 	setAdapterStates(alarmData) {
 		this.setState('title', { val: alarmData.title, ack: true });
 		this.setState('text', { val: alarmData.text, ack: true });
-		this.setState('foreign_id', { val: parseInt(alarmData.foreign_id), ack: true });
+		this.setState('foreign_id', { val: Number(alarmData.foreign_id), ack: true });
+		this.setState('divera_id', { val: Number(alarmData.id), ack: true });
 		this.setState('address', { val: alarmData.address, ack: true });
-		this.setState('lat', { val: alarmData.lat, ack: true });
-		this.setState('lng', { val: alarmData.lng, ack: true });
-		this.setState('date', { val: alarmData.date, ack: true });
+		this.setState('lat', { val: Number(alarmData.lat), ack: true });
+		this.setState('lng', { val: Number(alarmData.lng), ack: true });
+		this.setState('date', { val: Number(alarmData.date), ack: true });
 		this.setState('priority', { val: alarmData.priority, ack: true });
 		this.setState('addressed_users', { val: alarmData.ucr_addressed.join(), ack: true });
 		this.setState('addressed_groups', { val: alarmData.group.join(), ack: true });
@@ -459,12 +469,12 @@ class Divera247 extends utils.Adapter {
 	}
 
 	getMembershipIds() {
-		let memberShipIDs = [];
+		const memberShipIDs = [];
 		diveraMemberships.forEach(element => {
 			memberShipIDs.push(element.id);
 		});
 		this.log.debug('memberShipIDs: ' + JSON.stringify(memberShipIDs));
-		return memberShipIDs
+		return memberShipIDs;
 	}
 
 	// Is called when adapter shuts down
