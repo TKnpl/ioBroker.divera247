@@ -14,7 +14,7 @@
 
 ## divera247 adapter for ioBroker
 
-Adapter for the alerting service ["Divera 24/7"](https://www.divera247.com/)
+Adapter for the alerting service <a href="https://www.divera247.com/" target="_blank">Divera 24/7</a>
 
 ## Requirements
 For full usability of this adapter your organisation has to subscribe the "Alarm" plan of Divera 24/7 services

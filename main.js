@@ -11,6 +11,119 @@ let alarmIsActive = false;
 
 const pollIntervallSeconds = 15;
 
+const dataPoints = [{
+	'id': 'alarm',
+	'name': 'Alarm',
+	'type': 'boolean',
+	'role': 'indicator',
+	'read': true,
+	'write': false
+},
+{
+	'id': 'title',
+	'name': 'Einsatzstichwort',
+	'type': 'string',
+	'role': 'text',
+	'read': true,
+	'write': false
+},
+{
+	'id': 'text',
+	'name': 'Meldungstext',
+	'type': 'string',
+	'role': 'text',
+	'read': true,
+	'write': false
+},
+{
+	'id': 'foreign_id',
+	'name': 'Einsatznummer',
+	'type': 'number',
+	'role': 'text',
+	'read': true,
+	'write': false
+},
+{
+	'id': 'divera_id',
+	'name': 'Einsatz ID',
+	'type': 'number',
+	'role': 'text',
+	'read': true,
+	'write': false
+},
+{
+	'id': 'address',
+	'name': 'Adresse',
+	'type': 'string',
+	'role': 'text',
+	'read': true,
+	'write': false
+},
+{
+	'id': 'lat',
+	'name': 'Längengrad',
+	'type': 'number',
+	'role': 'text',
+	'read': true,
+	'write': false
+},
+{
+	'id': 'lng',
+	'name': 'Breitengrad',
+	'type': 'number',
+	'role': 'text',
+	'read': true,
+	'write': false
+},
+{
+	'id': 'date',
+	'name': 'Alarmierungszeit',
+	'type': 'number',
+	'role': 'date',
+	'read': true,
+	'write': false
+},
+{
+	'id': 'priority',
+	'name': 'Priorität/Sonderrechte',
+	'type': 'boolean',
+	'role': 'indicator',
+	'read': true,
+	'write': false
+},
+{
+	'id': 'addressed_users',
+	'name': 'Alarmierte Benutzer',
+	'type': 'string',
+	'role': 'text',
+	'read': true,
+	'write': false
+},
+{
+	'id': 'addressed_groups',
+	'name': 'Alarmierte Gruppen',
+	'type': 'string',
+	'role': 'text',
+	'read': true,
+	'write': false
+},
+{
+	'id': 'addressed_vehicle',
+	'name': 'Alarmierte Fahrzeuge',
+	'type': 'string',
+	'role': 'text',
+	'read': true,
+	'write': false
+},
+{
+	'id': 'lastUpdate',
+	'name': 'Letzte Aktualisierung',
+	'type': 'number',
+	'role': 'date',
+	'read': true,
+	'write': false
+}];
+
 class Divera247 extends utils.Adapter {
 
 	constructor(options) {
@@ -28,187 +141,20 @@ class Divera247 extends utils.Adapter {
 	async onReady() {
 		this.setState('info.connection', false, true);
 
-		// Creating the Object 'alarm' -> response JSON key 'success'
-		await this.setObjectNotExistsAsync('alarm', {
-			type: 'state',
-			common: {
-				name: 'Alarm',
-				type: 'boolean',
-				role: 'indicator',
-				read: true,
-				write: false
-			},
-			native: {},
-		});
-
-		// Creating the Object 'title' -> response JSON key 'data.title'
-		await this.setObjectNotExistsAsync('title', {
-			type: 'state',
-			common: {
-				name: 'Einsatzstichwort',
-				type: 'string',
-				role: 'text',
-				read: true,
-				write: false
-			},
-			native: {},
-		});
-
-		// Creating the Object 'title' -> response JSON key 'data.title'
-		await this.setObjectNotExistsAsync('text', {
-			type: 'state',
-			common: {
-				name: 'Meldungstext',
-				type: 'string',
-				role: 'text',
-				read: true,
-				write: false
-			},
-			native: {},
-		});
-
-		// Creating the Object 'foreign_id' -> response JSON key 'data.foreign_id'
-		await this.setObjectNotExistsAsync('foreign_id', {
-			type: 'state',
-			common: {
-				name: 'Einsatznummer',
-				type: 'number',
-				role: 'text',
-				read: true,
-				write: false
-			},
-			native: {},
-		});
-
-		// Creating the Object 'divera_id' -> response JSON key 'data.id'
-		await this.setObjectNotExistsAsync('divera_id', {
-			type: 'state',
-			common: {
-				name: 'Einsatz ID',
-				type: 'number',
-				role: 'text',
-				read: true,
-				write: false
-			},
-			native: {},
-		});
-
-		// Creating the Object 'address' -> response JSON key 'data.address'
-		await this.setObjectNotExistsAsync('address', {
-			type: 'state',
-			common: {
-				name: 'Adresse',
-				type: 'string',
-				role: 'text',
-				read: true,
-				write: false
-			},
-			native: {},
-		});
-
-		// Creating the Object 'lat' -> response JSON key 'data.lat'
-		await this.setObjectNotExistsAsync('lat', {
-			type: 'state',
-			common: {
-				name: 'Längengrad',
-				type: 'number',
-				role: 'text',
-				read: true,
-				write: false
-			},
-			native: {},
-		});
-
-		// Creating the Object 'lng' -> response JSON key 'data.lng'
-		await this.setObjectNotExistsAsync('lng', {
-			type: 'state',
-			common: {
-				name: 'Breitengrad',
-				type: 'number',
-				role: 'text',
-				read: true,
-				write: false
-			},
-			native: {},
-		});
-
-		// Creating the Object 'date' -> response JSON key 'data.date'
-		await this.setObjectNotExistsAsync('date', {
-			type: 'state',
-			common: {
-				name: 'Alarmierungszeit',
-				type: 'number',
-				role: 'date',
-				read: true,
-				write: false
-			},
-			native: {},
-		});
-
-		// Creating the Object 'priority' -> response JSON key 'data.priority'
-		await this.setObjectNotExistsAsync('priority', {
-			type: 'state',
-			common: {
-				name: 'Priorität/Sonderrechte',
-				type: 'boolean',
-				role: 'indicator',
-				read: true,
-				write: false
-			},
-			native: {},
-		});
-
-		// Creating the Object 'addressed_users' -> response JSON key 'data.ucr_addressed'
-		await this.setObjectNotExistsAsync('addressed_users', {
-			type: 'state',
-			common: {
-				name: 'Alarmierte Benutzer',
-				type: 'string',
-				role: 'text',
-				read: true,
-				write: false
-			},
-			native: {},
-		});
-
-		// Creating the Object 'addressed_group' -> response JSON key 'data.group'
-		await this.setObjectNotExistsAsync('addressed_groups', {
-			type: 'state',
-			common: {
-				name: 'Alarmierte Gruppen',
-				type: 'string',
-				role: 'text',
-				read: true,
-				write: false
-			},
-			native: {},
-		});
-
-		// Creating the Object 'addressed_vehicle' -> response JSON key 'data.vehicle'
-		await this.setObjectNotExistsAsync('addressed_vehicle', {
-			type: 'state',
-			common: {
-				name: 'Alarmierte Fahrzeuge',
-				type: 'string',
-				role: 'text',
-				read: true,
-				write: false
-			},
-			native: {},
-		});
-
-		// Creating the Object 'lastUpdate' -> current timestamp
-		await this.setObjectNotExistsAsync('lastUpdate', {
-			type: 'state',
-			common: {
-				name: 'Letzte Aktualisierung',
-				type: 'number',
-				role: 'date',
-				read: true,
-				write: false
-			},
-			native: {},
-		});
+		// Generating DataPoints for this adapter
+		dataPoints.forEach(function (elm) {
+			this.setObjectNotExistsAsync(elm.id, {
+				type: 'state',
+				common: {
+					name: elm.name,
+					type: elm.type,
+					role: elm.role,
+					read: elm.read,
+					write: elm.write
+				},
+				native: {},
+			});
+		}.bind(this));
 
 		////////////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 		const diveraLoginName = this.config.diveraUserLogin;
