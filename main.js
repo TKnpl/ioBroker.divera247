@@ -4,10 +4,15 @@ const utils = require('@iobroker/adapter-core');
 const axios = require('axios');
 const adapterName = require('./package.json').name.split('.').pop();
 
-let diveraAPIAccessToken = '';
-let diveraMemberships = [];
-let lastAlarmId = null;
-let alarmIsActive = false;
+const userData = [];
+userData['diveraAPIToken'] = '';
+userData['diveraMemberships'] = [];
+
+const internalAlarmData = [];
+internalAlarmData['alarmID'] = 0;
+internalAlarmData['alarmClosed'] = true;
+internalAlarmData['lastAlarmUpdate'] = 0;
+
 
 const pollIntervallSeconds = 15;
 
@@ -166,27 +171,11 @@ class Divera247 extends utils.Adapter {
 		const diveraUserIDs = diveraUserIdInput.replace(/\s/g, '').split(',');
 		const diveraUserGroups = diveraUserGroupInput.replace(/\s/g, '').split(',');
 
-		// Check if all values of diveraUserIDs are numbers => valid
-		let userIDInputIsValid = false;
-		if (diveraUserIDs.length > 0) {
-			for (const userIDfromInput of diveraUserIDs) {
-				if (!isNaN(Number(userIDfromInput))) {
-					userIDInputIsValid = true;
-					break;
-				}
-			}
-		}
+		// Check if all values of diveraUserIDs are valid
+		const userIDInputIsValid = this.uiFilterIsValid(diveraUserIDs)[0];
 
-		// Check if all values of diveraUserGroups are numbers => valid
-		let userGroupInputIsValid = false;
-		if (diveraUserGroups.length > 0) {
-			for (const userGroupfromInput of diveraUserGroups) {
-				if (!isNaN(Number(userGroupfromInput))) {
-					userGroupInputIsValid = true;
-					break;
-				}
-			}
-		}
+		// Check if all values of diveraUserGroups are valid
+		const userGroupInputIsValid = this.uiFilterIsValid(diveraUserGroups)[0];
 
 		// Startup logic from here. Login and API calls
 		if (diveraLoginName && diveraLoginPassword && pollIntervallSeconds && userIDInputIsValid && userGroupInputIsValid) {
@@ -194,8 +183,10 @@ class Divera247 extends utils.Adapter {
 				// Connected to API
 				this.setState('info.connection', true, true);
 
+				this.log.debug('Login passed');
+
 				// Start repeating Call of the API
-				this.getDataFromApiAndSetObjects(diveraAPIAccessToken, diveraFilterOnlyAlarmsForMyUser, diveraUserIDs, diveraUserGroups);
+				this.getDataFromApiAndSetObjects(userData.diveraAPIToken, diveraFilterOnlyAlarmsForMyUser, diveraUserIDs, diveraUserGroups);
 			} else {
 				this.log.error('Login to API failed');
 			}
@@ -204,10 +195,23 @@ class Divera247 extends utils.Adapter {
 		}
 	}
 
+	uiFilterIsValid(obj) {
+		const valuesGiven = obj.length > 0;
+		let valuesGivenAndValid = false;
+		if (valuesGiven) {
+			let allInputsValid = true;
+			obj.forEach( (elm) => {
+				isNaN(Number(elm)) ? allInputsValid = false : '';
+			});
+			valuesGivenAndValid = allInputsValid;
+		}
+		return [valuesGiven ? valuesGivenAndValid : true, valuesGiven];
+	}
+
 	/**
 	 *	Function to login to the API
 	 *	returns true / false
-	 *	If successful, it is setting diveraAPIAccessToken and diveraMemberships
+	 *	If successful, it is setting userData.diveraAPIToken and userData.diveraMemberships
 	 *
 	 * @param {string} diveraLoginName
 	 * @param {string} diveraLoginPassword
@@ -233,9 +237,9 @@ class Divera247 extends utils.Adapter {
 
 				if (response.status == 200 && responseBody.success) {
 					this.log.debug('Connected to API');
-					diveraAPIAccessToken = responseBody.data.user.access_token;
-					diveraMemberships = responseBody.data.ucr;
-					this.log.debug('Divera Memberships: ' + JSON.stringify(diveraMemberships));
+					userData.diveraAPIToken = responseBody.data.user.access_token;
+					userData.diveraMemberships = responseBody.data.ucr;
+					this.log.debug('Divera Memberships: ' + JSON.stringify(userData.diveraMemberships));
 					return true;
 				} else {
 					return false;
@@ -286,7 +290,7 @@ class Divera247 extends utils.Adapter {
 					// @ts-ignore
 					if (!state.val) {
 						this.setState('info.connection', true, true);
-						this.log.debug('Reconnected to API successfully');
+						this.log.debug('Reconnected to API');
 					}
 				});
 
@@ -295,23 +299,27 @@ class Divera247 extends utils.Adapter {
 
 				// Setting the alarm specific states when a new alarm is active and addressed to the configured divera user id
 				if (content.success && Object.keys(content.data.items).length > 0) {
-					const lastAlarmContent = content.data.items[content.data.sorting[0]];
-					if (lastAlarmId != lastAlarmContent.id && !lastAlarmContent.closed) {
-						this.log.debug('Alarm!');
+					const alarmContent = content.data.items[content.data.sorting[0]];
+					if (internalAlarmData.alarmID != alarmContent.id && !alarmContent.closed) {
+						this.log.debug('New alarm!');
 						this.log.debug('Received data from Divera-API: ' + JSON.stringify(content));
 
-						lastAlarmId = lastAlarmContent.id;
-						alarmIsActive = !lastAlarmContent.closed;
+						// Setting internal variables for later checkes
+						internalAlarmData.alarmID = alarmContent.id;
+						internalAlarmData.alarmClosed = alarmContent.closed;
+						internalAlarmData.lastAlarmUpdate = alarmContent.ts_update;
 
 						// Variable for checking if alarm already given
 						let adapterStatesRefreshedForThisAlarm = false;
 
+						//this.log.debug('Test: ' + this.giveAlarm(alarmContent));
+
 						// Checking if only user alarms should be displayed
 						if (diveraFilterOnlyAlarmsForMyUser) {
-							for (const elm of diveraMemberships) {
+							for (const elm of userData.diveraMemberships) {
 								this.log.debug('checking if my user-id \'' + elm.id + '\' for \'' + elm.name + '\' is alarmed');
-								if (lastAlarmContent.ucr_addressed.includes(parseInt(elm.id, 10))) {
-									this.setAdapterStates(lastAlarmContent);
+								if (alarmContent.ucr_addressed.includes(parseInt(elm.id, 10))) {
+									this.setAdapterStates(alarmContent);
 									this.log.debug('my user is alarmed - states refreshed for the current alarm');
 									adapterStatesRefreshedForThisAlarm = true;
 									break;
@@ -325,8 +333,8 @@ class Divera247 extends utils.Adapter {
 						if (diveraUserIDs.length > 0 && diveraUserIDs[0] != '' && !adapterStatesRefreshedForThisAlarm) {
 							for (const elm of diveraUserIDs) {
 								this.log.debug('checking if user \'' + elm + '\' is alarmed');
-								if (lastAlarmContent.ucr_addressed.includes(parseInt(elm, 10))) {
-									this.setAdapterStates(lastAlarmContent);
+								if (alarmContent.ucr_addressed.includes(parseInt(elm, 10))) {
+									this.setAdapterStates(alarmContent);
 									this.log.debug('user is alarmed - states refreshed for the current alarm');
 									adapterStatesRefreshedForThisAlarm = true;
 									break;
@@ -340,8 +348,8 @@ class Divera247 extends utils.Adapter {
 						if (diveraUserGroups.length > 0 && diveraUserGroups[0] != '' && !adapterStatesRefreshedForThisAlarm) {
 							for (const elm of diveraUserGroups) {
 								this.log.debug('checking if group \'' + elm + '\' is alarmed');
-								if (lastAlarmContent.group.includes(parseInt(elm, 10))) {
-									this.setAdapterStates(lastAlarmContent);
+								if (alarmContent.group.includes(parseInt(elm, 10))) {
+									this.setAdapterStates(alarmContent);
 									this.log.debug('group is alarmed - states refreshed for the current alarm');
 									adapterStatesRefreshedForThisAlarm = true;
 									break;
@@ -354,13 +362,13 @@ class Divera247 extends utils.Adapter {
 						// Updating states if no userID or group is specified
 						if (!adapterStatesRefreshedForThisAlarm) {
 							this.log.debug('userID and group check skipped as of no userID or group is specified or my user was already alarmed');
-							this.setAdapterStates(lastAlarmContent);
+							this.setAdapterStates(alarmContent);
 							this.log.debug('states refreshed for the current alarm');
 						}
-					} else if (lastAlarmId == lastAlarmContent.id && lastAlarmContent.closed && alarmIsActive) {
-						this.setState('alarm', { val: !lastAlarmContent.closed, ack: true });
+					} else if (internalAlarmData.alarmID == alarmContent.id && alarmContent.closed && !internalAlarmData.alarmClosed) {
+						this.setState('alarm', { val: !alarmContent.closed, ack: true });
 						this.log.debug('alarm is closed');
-						alarmIsActive = !lastAlarmContent.closed;
+						internalAlarmData.alarmClosed = alarmContent.closed;
 					}
 				}
 			}
@@ -393,6 +401,16 @@ class Divera247 extends utils.Adapter {
 			this.getDataFromApiAndSetObjects(diveraAccessKey, diveraFilterOnlyAlarmsForMyUser, diveraUserIDs, diveraUserGroups);
 		}, pollIntervallSeconds * 1000);
 	}
+
+	// giveAlarm(alarmData) {
+	// 	if (this.diveraFilterOnlyAlarmsForMyUser) {
+	// 		userData.diveraMemberships.forEach( (elm) => {
+	// 			if (alarmData.ucr_addressed.includes(parseInt(elm.id, 10))) {
+	// 				return true;
+	// 			}
+	// 		});
+	// 	}
+	// }
 
 	// Function to set satates
 	/**
