@@ -142,7 +142,7 @@ class Divera247 extends utils.Adapter {
 		this.setState('info.connection', false, true);
 
 		// Generating DataPoints for this adapter
-		dataPoints.forEach(function (elm) {
+		dataPoints.forEach( (elm) => {
 			this.setObjectNotExistsAsync(elm.id, {
 				type: 'state',
 				common: {
@@ -154,7 +154,7 @@ class Divera247 extends utils.Adapter {
 				},
 				native: {},
 			});
-		}.bind(this));
+		});
 
 		////////////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 		const diveraLoginName = this.config.diveraUserLogin;
@@ -167,24 +167,22 @@ class Divera247 extends utils.Adapter {
 		const diveraUserGroups = diveraUserGroupInput.replace(/\s/g, '').split(',');
 
 		// Check if all values of diveraUserIDs are numbers => valid
-		let userIDInputIsValid = true;
-		if (diveraUserIDs.length > 0 && diveraUserIDs[0] != '') {
+		let userIDInputIsValid = false;
+		if (diveraUserIDs.length > 0) {
 			for (const userIDfromInput of diveraUserIDs) {
-				if (isNaN(Number(userIDfromInput))) {
-					this.log.error('UserID \'' + userIDfromInput + '\' is not a Number');
-					userIDInputIsValid = false;
+				if (!isNaN(Number(userIDfromInput))) {
+					userIDInputIsValid = true;
 					break;
 				}
 			}
 		}
 
 		// Check if all values of diveraUserGroups are numbers => valid
-		let userGroupInputIsValid = true;
-		if (diveraUserGroups.length > 0 && diveraUserGroups[0] != '') {
+		let userGroupInputIsValid = false;
+		if (diveraUserGroups.length > 0) {
 			for (const userGroupfromInput of diveraUserGroups) {
-				if (isNaN(Number(userGroupfromInput))) {
-					this.log.error('UserGroup \'' + userGroupfromInput + '\' is not a Number');
-					userGroupInputIsValid = false;
+				if (!isNaN(Number(userGroupfromInput))) {
+					userGroupInputIsValid = true;
 					break;
 				}
 			}
@@ -197,7 +195,7 @@ class Divera247 extends utils.Adapter {
 				this.setState('info.connection', true, true);
 
 				// Start repeating Call of the API
-				await this.getDataFromApiAndSetObjects(diveraAPIAccessToken, diveraFilterOnlyAlarmsForMyUser, diveraUserIDs, diveraUserGroups);
+				this.getDataFromApiAndSetObjects(diveraAPIAccessToken, diveraFilterOnlyAlarmsForMyUser, diveraUserIDs, diveraUserGroups);
 			} else {
 				this.log.error('Login to API failed');
 			}
@@ -216,6 +214,7 @@ class Divera247 extends utils.Adapter {
 	 */
 	checkConnectionToApi(diveraLoginName, diveraLoginPassword) {
 		// Calling and loggin in into the API V2
+		// @ts-ignore
 		return axios({
 			method: 'post',
 			baseURL: 'https://www.divera247.com/',
@@ -229,7 +228,7 @@ class Divera247 extends utils.Adapter {
 			},
 			responseType: 'json'
 		}).then(
-			function (response) {
+			(response) => {
 				const responseBody = response.data;
 
 				if (response.status == 200 && responseBody.success) {
@@ -241,9 +240,9 @@ class Divera247 extends utils.Adapter {
 				} else {
 					return false;
 				}
-			}.bind(this)
+			}
 		).catch(
-			function (error) {
+			(error) => {
 				if (error.response) {
 					// The request was made and the server responded with a error status code
 					this.log.error('received error ' + error.response.status + ' response with content: ' + JSON.stringify(error.response.data));
@@ -257,7 +256,7 @@ class Divera247 extends utils.Adapter {
 					this.log.error(error.message);
 					return false;
 				}
-			}.bind(this)
+			}
 		);
 	}
 
@@ -271,23 +270,25 @@ class Divera247 extends utils.Adapter {
 	 */
 	async getDataFromApiAndSetObjects(diveraAccessKey, diveraFilterOnlyAlarmsForMyUser, diveraUserIDs, diveraUserGroups) {
 		// Calling the alerting-server api
+		// @ts-ignore
 		await axios({
 			method: 'get',
 			baseURL: 'https://www.divera247.com/',
 			url: '/api/v2/alarms?accesskey=' + diveraAccessKey,
 			responseType: 'json'
 		}).then(
-			function (response) {
+			(response) => {
 				const content = response.data;
 
 				// If last request failed set info.connection true again
-				this.getState('info.connection', function (err, state) {
+				// @ts-ignore
+				this.getState('info.connection',  (err, state) => {
+					// @ts-ignore
 					if (!state.val) {
 						this.setState('info.connection', true, true);
 						this.log.debug('Reconnected to API successfully');
 					}
-				}.bind(this)
-				);
+				});
 
 				// Setting the update state
 				this.setState('lastUpdate', { val: Date.now(), ack: true });
@@ -362,9 +363,9 @@ class Divera247 extends utils.Adapter {
 						alarmIsActive = !lastAlarmContent.closed;
 					}
 				}
-			}.bind(this)
+			}
 		).catch(
-			function (error) {
+			(error) => {
 				if (error.response) {
 					// The request was made and the server responded with a error status code
 					if (error.response.status == 403) {
@@ -383,7 +384,7 @@ class Divera247 extends utils.Adapter {
 					this.log.error(error.message);
 					this.setState('info.connection', false, true);
 				}
-			}.bind(this)
+			}
 		);
 
 		// Timeout and self call handling

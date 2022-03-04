@@ -50,17 +50,17 @@ systemDictionary = {
 		"pl": "Pokaż tylko alarmy dla mojego użytkownika",
 		"zh-cn": "仅显示我的用户的警报"
 	},
-	"Alarm will triggers only if my username is included in the alarm": {
-		"en": "Alarm will triggers only if my username is included in the alarm",
-		"de": "Der Alarm wird nur ausgelöst, wenn mein Benutzername in der Alarmierung enthalten ist",
-		"ru": "Тревога сработает только в том случае, если мое имя пользователя включено в тревогу",
-		"pt": "O alarme disparará apenas se meu nome de usuário estiver incluído no alarme",
-		"nl": "Alarm wordt alleen geactiveerd als mijn gebruikersnaam is opgenomen in het alarm",
-		"fr": "L'alarme ne se déclenchera que si mon nom d'utilisateur est inclus dans l'alarme",
-		"it": "L'allarme si attiva solo se il mio nome utente è incluso nell'allarme",
-		"es": "La alarma se activará solo si mi nombre de usuario está incluido en la alarma",
-		"pl": "Alarm uruchomi się tylko wtedy, gdy moja nazwa użytkownika jest uwzględniona w alarmie",
-		"zh-cn": "只有当我的用户名包含在警报中时，警报才会触发"
+	"Alarm will triggers only if my user is addressed in the alarming": {
+		"en": "Alarm will triggers only if my user is addressed in the alarming",
+		"de": "Alarm wird nur ausgelöst, wenn mein Benutzer in der Alarmierung enthalten ist",
+		"ru": "Тревога будет срабатывать только в том случае, если мой пользователь адресован в тревожной",
+		"pt": "O alarme será acionado apenas se meu usuário for abordado no alarme",
+		"nl": "Alarm wordt alleen geactiveerd als mijn gebruiker is aangesproken in de alarmering",
+		"fr": "L'alarme ne se déclenchera que si mon utilisateur est adressé dans l'alarme",
+		"it": "L'allarme si attiverà solo se il mio utente è indirizzato nell'allarme",
+		"es": "La alarma se activará solo si mi usuario está direccionado en la alarma",
+		"pl": "Alarm uruchomi się tylko wtedy, gdy mój użytkownik zostanie zaadresowany w alarmującym",
+		"zh-cn": "只有当我的用户在警报中得到解决时，警报才会触发"
 	},
 	"Divera user IDs": {
 		"en": "Divera user IDs",
