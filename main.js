@@ -300,8 +300,8 @@ class Divera247 extends utils.Adapter {
 				// Setting the alarm specific states when a new alarm is active and addressed to the configured divera user id
 				if (content.success && Object.keys(content.data.items).length > 0) {
 					const alarmContent = content.data.items[content.data.sorting[0]];
-					if (internalAlarmData.alarmID != alarmContent.id && !alarmContent.closed) {
-						this.log.debug('New alarm!');
+					if ((internalAlarmData.alarmID != alarmContent.id && !alarmContent.closed) || (internalAlarmData.alarmID == alarmContent.id && internalAlarmData.lastAlarmUpdate < alarmContent.ts_update && !alarmContent.closed)) {
+						this.log.debug('New or updated alarm!');
 						this.log.debug('Received data from Divera-API: ' + JSON.stringify(content));
 
 						// Setting internal variables for later checkes
@@ -401,16 +401,6 @@ class Divera247 extends utils.Adapter {
 			this.getDataFromApiAndSetObjects(diveraAccessKey, diveraFilterOnlyAlarmsForMyUser, diveraUserIDs, diveraUserGroups);
 		}, pollIntervallSeconds * 1000);
 	}
-
-	// giveAlarm(alarmData) {
-	// 	if (this.diveraFilterOnlyAlarmsForMyUser) {
-	// 		userData.diveraMemberships.forEach( (elm) => {
-	// 			if (alarmData.ucr_addressed.includes(parseInt(elm.id, 10))) {
-	// 				return true;
-	// 			}
-	// 		});
-	// 	}
-	// }
 
 	// Function to set satates
 	/**
