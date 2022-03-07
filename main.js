@@ -309,58 +309,41 @@ class Divera247 extends utils.Adapter {
 						internalAlarmData.alarmClosed = alarmContent.closed;
 						internalAlarmData.lastAlarmUpdate = alarmContent.ts_update;
 
-						// Variable for checking if alarm already given
-						let adapterStatesRefreshedForThisAlarm = false;
-
-						//this.log.debug('Test: ' + this.giveAlarm(alarmContent));
-
-						// Checking if only user alarms should be displayed
+						// Checking UI Input filter and trigger update the states
 						if (diveraFilterOnlyAlarmsForMyUser) {
 							for (const elm of userData.diveraMemberships) {
 								this.log.debug('checking if my user-id \'' + elm.id + '\' for \'' + elm.name + '\' is alarmed');
 								if (alarmContent.ucr_addressed.includes(parseInt(elm.id, 10))) {
 									this.setAdapterStates(alarmContent);
 									this.log.debug('my user is alarmed - states refreshed for the current alarm');
-									adapterStatesRefreshedForThisAlarm = true;
 									break;
 								} else {
 									this.log.debug('user is not alarmed');
 								}
 							}
-						}
-
-						// Checking if userIDs are specified and alarmed
-						if (diveraUserIDs.length > 0 && diveraUserIDs[0] != '' && !adapterStatesRefreshedForThisAlarm) {
+						} else if (diveraUserIDs.length > 0 && diveraUserIDs[0] != '') {
 							for (const elm of diveraUserIDs) {
 								this.log.debug('checking if user \'' + elm + '\' is alarmed');
 								if (alarmContent.ucr_addressed.includes(parseInt(elm, 10))) {
 									this.setAdapterStates(alarmContent);
 									this.log.debug('user is alarmed - states refreshed for the current alarm');
-									adapterStatesRefreshedForThisAlarm = true;
 									break;
 								} else {
 									this.log.debug('user is not alarmed');
 								}
 							}
-						}
-
-						// Checking if groups are specified and alarmed
-						if (diveraUserGroups.length > 0 && diveraUserGroups[0] != '' && !adapterStatesRefreshedForThisAlarm) {
+						} else if (diveraUserGroups.length > 0 && diveraUserGroups[0] != '') {
 							for (const elm of diveraUserGroups) {
 								this.log.debug('checking if group \'' + elm + '\' is alarmed');
 								if (alarmContent.group.includes(parseInt(elm, 10))) {
 									this.setAdapterStates(alarmContent);
 									this.log.debug('group is alarmed - states refreshed for the current alarm');
-									adapterStatesRefreshedForThisAlarm = true;
 									break;
 								} else {
 									this.log.debug('group is not alarmed');
 								}
 							}
-						}
-
-						// Updating states if no userID or group is specified
-						if (!adapterStatesRefreshedForThisAlarm) {
+						} else {
 							this.log.debug('userID and group check skipped as of no userID or group is specified or my user was already alarmed');
 							this.setAdapterStates(alarmContent);
 							this.log.debug('states refreshed for the current alarm');
