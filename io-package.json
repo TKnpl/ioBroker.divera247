@@ -1,8 +1,12 @@
 {
   "common": {
     "name": "divera247",
-    "version": "0.1.3",
+    "version": "0.2.0",
     "news": {
+      "0.2.0": {
+        "en": "Complete renewal of the adapter",
+        "de": "Generelle Erneuerung des Adapters"
+      },
       "0.1.3": {
         "en": "general revision of the adapter",
         "de": "Generelle Überarbeitung des Adapters"
