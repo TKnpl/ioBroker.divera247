@@ -414,7 +414,7 @@ class Divera247 extends utils.Adapter {
 		this.setState('address', { val: alarmData.address, ack: true });
 		this.setState('lat', { val: Number(alarmData.lat), ack: true });
 		this.setState('lng', { val: Number(alarmData.lng), ack: true });
-		this.setState('date', { val: Number(alarmData.date), ack: true });
+		this.setState('date', { val: Number(alarmData.date)*1000, ack: true });
 		this.setState('priority', { val: alarmData.priority, ack: true });
 		this.setState('addressed_users', { val: alarmData.ucr_addressed.join(), ack: true });
 		this.setState('addressed_groups', { val: alarmData.group.join(), ack: true });
