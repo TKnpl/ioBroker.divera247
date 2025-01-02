@@ -17,7 +17,7 @@ internalAlarmData['lastAlarmUpdate'] = 0;
 const pollIntervallSeconds = 15;
 
 const dataPoints = [{
-	'id': 'alarm',
+	'id': 'alarm.alarm',
 	'name': 'Alarm',
 	'type': 'boolean',
 	'role': 'indicator',
@@ -25,7 +25,7 @@ const dataPoints = [{
 	'write': false
 },
 {
-	'id': 'title',
+	'id': 'alarm.title',
 	'name': 'Einsatzstichwort',
 	'type': 'string',
 	'role': 'text',
@@ -33,7 +33,7 @@ const dataPoints = [{
 	'write': false
 },
 {
-	'id': 'text',
+	'id': 'alarm.text',
 	'name': 'Meldungstext',
 	'type': 'string',
 	'role': 'text',
@@ -41,7 +41,7 @@ const dataPoints = [{
 	'write': false
 },
 {
-	'id': 'foreign_id',
+	'id': 'alarm.foreign_id',
 	'name': 'Einsatznummer',
 	'type': 'number',
 	'role': 'text',
@@ -49,7 +49,7 @@ const dataPoints = [{
 	'write': false
 },
 {
-	'id': 'divera_id',
+	'id': 'alarm.divera_id',
 	'name': 'Einsatz ID',
 	'type': 'number',
 	'role': 'text',
@@ -57,7 +57,7 @@ const dataPoints = [{
 	'write': false
 },
 {
-	'id': 'address',
+	'id': 'alarm.address',
 	'name': 'Adresse',
 	'type': 'string',
 	'role': 'text',
@@ -65,7 +65,7 @@ const dataPoints = [{
 	'write': false
 },
 {
-	'id': 'lat',
+	'id': 'alarm.lat',
 	'name': 'Längengrad',
 	'type': 'number',
 	'role': 'text',
@@ -73,7 +73,7 @@ const dataPoints = [{
 	'write': false
 },
 {
-	'id': 'lng',
+	'id': 'alarm.lng',
 	'name': 'Breitengrad',
 	'type': 'number',
 	'role': 'text',
@@ -81,7 +81,7 @@ const dataPoints = [{
 	'write': false
 },
 {
-	'id': 'date',
+	'id': 'alarm.date',
 	'name': 'Alarmierungszeit',
 	'type': 'number',
 	'role': 'date',
@@ -89,7 +89,7 @@ const dataPoints = [{
 	'write': false
 },
 {
-	'id': 'priority',
+	'id': 'alarm.priority',
 	'name': 'Priorität/Sonderrechte',
 	'type': 'boolean',
 	'role': 'indicator',
@@ -97,7 +97,7 @@ const dataPoints = [{
 	'write': false
 },
 {
-	'id': 'addressed_users',
+	'id': 'alarm.addressed_users',
 	'name': 'Alarmierte Benutzer',
 	'type': 'string',
 	'role': 'text',
@@ -105,7 +105,7 @@ const dataPoints = [{
 	'write': false
 },
 {
-	'id': 'addressed_groups',
+	'id': 'alarm.addressed_groups',
 	'name': 'Alarmierte Gruppen',
 	'type': 'string',
 	'role': 'text',
@@ -113,7 +113,7 @@ const dataPoints = [{
 	'write': false
 },
 {
-	'id': 'addressed_vehicle',
+	'id': 'alarm.addressed_vehicle',
 	'name': 'Alarmierte Fahrzeuge',
 	'type': 'string',
 	'role': 'text',
@@ -121,12 +121,116 @@ const dataPoints = [{
 	'write': false
 },
 {
-	'id': 'lastUpdate',
+	'id': 'info.lastUpdate',
 	'name': 'Letzte Aktualisierung',
 	'type': 'number',
 	'role': 'date',
 	'read': true,
 	'write': false
+},
+{
+	'id': 'status.id',
+	'name': 'Status ID',
+	'type': 'number',
+	'role': 'text',
+	'read': true,
+	'write': false
+},
+{
+	'id': 'status.name',
+	'name': 'Status Name',
+	'type': 'string',
+	'role': 'text',
+	'read': true,
+	'write': false
+},
+{
+	'id': 'status.note',
+	'name': 'Status Notiz',
+	'type': 'string',
+	'role': 'text',
+	'read': true,
+	'write': false
+},
+{
+	'id': 'status.set.number',
+	'name': 'Status setzen',
+	'type': 'number',
+	'role': 'value',
+	'read': false,
+	'write': true
+},
+{
+    'id': 'status.set.id',
+    'name': 'Status ID',
+    'type': 'number',
+    'role': 'value',
+    'read': true,
+    'write': true
+},
+{
+    'id': 'status.set.vehicle',
+    'name': 'Vehicle ID',
+    'type': 'number',
+    'role': 'value',
+    'read': true,
+    'write': true
+},
+{
+    'id': 'status.set.note',
+    'name': 'Note',
+    'type': 'string',
+    'role': 'text',
+    'read': true,
+    'write': true
+},
+{
+    'id': 'status.set.reset_date',
+    'name': 'Reset Date',
+    'type': 'number',
+    'role': 'value',
+    'read': true,
+    'write': true
+},
+{
+    'id': 'status.set.reset_to',
+    'name': 'Reset To',
+    'type': 'number',
+    'role': 'value',
+    'read': true,
+    'write': true
+},
+{
+    'id': 'status.set.alarm_skip',
+    'name': 'Alarm Skip',
+    'type': 'boolean',
+    'role': 'switch',
+    'read': true,
+    'write': true
+},
+{
+    'id': 'status.set.status_skip_statusplan',
+    'name': 'Status Skip Statusplan',
+    'type': 'boolean',
+    'role': 'switch',
+    'read': true,
+    'write': true
+},
+{
+    'id': 'status.set.status_skip_geofence',
+    'name': 'Status Skip Geofence',
+    'type': 'boolean',
+    'role': 'switch',
+    'read': true,
+    'write': true
+},
+{
+    'id': 'status.set.set_status',
+    'name': 'Set Status Button',
+    'type': 'boolean',
+    'role': 'button',
+    'read': false,
+    'write': true
 }];
 
 class Divera247 extends utils.Adapter {
@@ -141,10 +245,13 @@ class Divera247 extends utils.Adapter {
 
 		this.on('ready', this.onReady.bind(this));
 		this.on('unload', this.onUnload.bind(this));
+		this.on('stateChange', this.onStateChange.bind(this));
 	}
 
 	async onReady() {
 		this.setState('info.connection', false, true);
+
+		await this.subscribeStatesAsync('*');
 
 		// Generating DataPoints for this adapter
 		dataPoints.forEach( (elm) => {
@@ -273,6 +380,66 @@ class Divera247 extends utils.Adapter {
 	 * @param {string[]} diveraUserGroups
 	 */
 	async getDataFromApiAndSetObjects(diveraAccessKey, diveraFilterOnlyAlarmsForMyUser, diveraUserIDs, diveraUserGroups) {
+
+		// Caling the Pull API
+		// @ts-ignore
+		await axios({
+			method: 'get',
+			baseURL: 'https://www.divera247.com/',
+			url: '/api/v2/pull/all?accesskey=' + diveraAccessKey,
+			responseType: 'json'
+		}).then(
+			(response) => {
+				const content = response.data.data;
+
+				// If last request failed set info.connection true again
+				// @ts-ignore
+				this.getState('info.connection',  (err, state) => {
+					// @ts-ignore
+					if (!state.val) {
+						this.setState('info.connection', true, true);
+						this.log.debug('Reconnected to API');
+					}
+				});
+
+				//this.log.debug(JSON.stringify(response.data.data.status.status_id, getCircularReplacer()));
+
+				if (response.data.success && Object.keys(content).length > 0) {
+
+					if (content.status && content.cluster && content.cluster.status) {
+						const statusId = content.status.status_id || 0;
+						const statusInfo = content.cluster.status[statusId];
+						const statusName = statusInfo ? statusInfo.name : 'Unbekannt';
+
+						this.setState('status.id', statusId, true);
+						this.setState('status.note', content.status.note || '', true);
+						this.setState('status.name', statusName, true);
+					}
+				}
+			}
+		).catch(
+			(error) => {
+				if (error.response) {
+					// The request was made and the server responded with a error status code
+					if (error.response.status == 403) {
+						this.log.error('Login not possible');
+						this.setState('info.connection', false, true);
+					} else {
+						this.log.warn('received error ' + error.response.status + ' response with content: ' + JSON.stringify(error.response.data));
+						this.setState('info.connection', false, true);
+					}
+				} else if (error.request) {
+					// The request was made but no response was received
+					this.log.error(error.message);
+					this.setState('info.connection', false, true);
+				} else {
+					// Something happened in setting up the request that triggered an Error
+					this.log.error(error.message);
+					this.setState('info.connection', false, true);
+				}
+			}
+		);
+
 		// Calling the alerting-server api
 		// @ts-ignore
 		await axios({
@@ -295,7 +462,7 @@ class Divera247 extends utils.Adapter {
 				});
 
 				// Setting the update state
-				this.setState('lastUpdate', { val: Date.now(), ack: true });
+				this.setState('info.lastUpdate', { val: Date.now(), ack: true });
 
 				// Setting the alarm specific states when a new alarm is active and addressed to the configured divera user id
 				if (content.success && Object.keys(content.data.items).length > 0) {
@@ -376,7 +543,7 @@ class Divera247 extends utils.Adapter {
 					this.setState('info.connection', false, true);
 				}
 			}
-		);
+		);		
 
 		// Timeout and self call handling
 		this.refreshStateTimeout = this.refreshStateTimeout || setTimeout(() => {
@@ -390,19 +557,82 @@ class Divera247 extends utils.Adapter {
 	 * @param {{ title: string; text: string; foreign_id: number; id: number; address: string; lat: number; lng: number; date: number; priority: boolean; ucr_addressed: string[]; group: string[]; vehicle: string[]; }} alarmData
 	 */
 	setAdapterStates(alarmData) {
-		this.setState('title', { val: alarmData.title, ack: true });
-		this.setState('text', { val: alarmData.text, ack: true });
-		this.setState('foreign_id', { val: Number(alarmData.foreign_id), ack: true });
-		this.setState('divera_id', { val: Number(alarmData.id), ack: true });
-		this.setState('address', { val: alarmData.address, ack: true });
-		this.setState('lat', { val: Number(alarmData.lat), ack: true });
-		this.setState('lng', { val: Number(alarmData.lng), ack: true });
-		this.setState('date', { val: Number(alarmData.date)*1000, ack: true });
-		this.setState('priority', { val: alarmData.priority, ack: true });
-		this.setState('addressed_users', { val: alarmData.ucr_addressed.join(), ack: true });
-		this.setState('addressed_groups', { val: alarmData.group.join(), ack: true });
-		this.setState('addressed_vehicle', { val: alarmData.vehicle.join(), ack: true });
-		this.setState('alarm', { val: true, ack: true });
+		this.setState('alarm.title', { val: alarmData.title, ack: true });
+		this.setState('alarm.text', { val: alarmData.text, ack: true });
+		this.setState('alarm.foreign_id', { val: Number(alarmData.foreign_id), ack: true });
+		this.setState('alarm.divera_id', { val: Number(alarmData.id), ack: true });
+		this.setState('alarm.address', { val: alarmData.address, ack: true });
+		this.setState('alarm.lat', { val: Number(alarmData.lat), ack: true });
+		this.setState('alarm.lng', { val: Number(alarmData.lng), ack: true });
+		this.setState('alarm.date', { val: Number(alarmData.date)*1000, ack: true });
+		this.setState('alarm.priority', { val: alarmData.priority, ack: true });
+		this.setState('alarm.addressed_users', { val: alarmData.ucr_addressed.join(), ack: true });
+		this.setState('alarm.addressed_groups', { val: alarmData.group.join(), ack: true });
+		this.setState('alarm.addressed_vehicle', { val: alarmData.vehicle.join(), ack: true });
+		this.setState('alarm.alarm', { val: true, ack: true });
+	}
+
+	async onStateChange(id, state) {
+		if (state && !state.ack) {
+			if (id === this.namespace + '.status.set.number') {
+				const statusNumber = state.val;
+				const url = `https://www.divera247.com/statusgeber.html?status=${statusNumber}&accesskey=${userData.diveraAPIToken}`;
+
+				try {
+					const response = await axios.get(url);
+					this.log.info(`Status set to ${statusNumber}: ${response.status}`);
+				} catch (error) {
+					this.log.error(`Failed to set status to ${statusNumber}: ${error.message}`);
+				}
+				this.setState('status.set.number', { val: null, ack: true });
+			}
+
+			if (id === this.namespace + '.status.set.set_status') {
+				const statusId = await this.getStateAsync(this.namespace + '.status.set.id');
+				const vehicle = await this.getStateAsync(this.namespace + '.status.set.vehicle');
+				const note = await this.getStateAsync(this.namespace + '.status.set.note');
+				const resetDate = await this.getStateAsync(this.namespace + '.status.set.reset_date');
+				const resetTo = await this.getStateAsync(this.namespace + '.status.set.reset_to');
+				const alarmSkip = await this.getStateAsync(this.namespace + '.status.set.alarm_skip');
+				const statusSkipStatusplan = await this.getStateAsync(this.namespace + '.status.set.status_skip_statusplan');
+				const statusSkipGeofence = await this.getStateAsync(this.namespace + '.status.set.status_skip_geofence');
+
+				const url = `https://www.divera247.com/api/v2/statusgeber/set-status?accesskey=${userData.diveraAPIToken}`;
+				const data = {
+					Status: {
+						id: statusId ? statusId.val : null,
+						vehicle: vehicle ? vehicle.val : null,
+						note: note ? note.val : '',
+						reset_date: resetDate ? resetDate.val : null,
+						reset_to: resetTo ? resetTo.val : null,
+						alarm_skip: alarmSkip ? alarmSkip.val : false,
+						status_skip_statusplan: statusSkipStatusplan ? statusSkipStatusplan.val : false,
+						status_skip_geofence: statusSkipGeofence ? statusSkipGeofence.val : false
+					}
+				};
+
+				try {
+					const response = await axios.post(url, data);
+					this.log.info(`Status set via POST: ${response.status}`);
+					// Reset states to null upon successful completion
+					this.setState(this.namespace + '.status.set.id', { val: null, ack: true });
+					this.setState(this.namespace + '.status.set.vehicle', { val: null, ack: true });
+					this.setState(this.namespace + '.status.set.note', { val: '', ack: true });
+					this.setState(this.namespace + '.status.set.reset_date', { val: null, ack: true });
+					this.setState(this.namespace + '.status.set.reset_to', { val: null, ack: true });
+					this.setState(this.namespace + '.status.set.alarm_skip', { val: false, ack: true });
+					this.setState(this.namespace + '.status.set.status_skip_statusplan', { val: false, ack: true });
+					this.setState(this.namespace + '.status.set.status_skip_geofence', { val: false, ack: true });
+					this.setState(this.namespace + '.status.set.set_status', { val: false, ack: true });
+				} catch (error) {
+					this.log.error(`Failed to set status via POST: ${error.message}`);
+				}
+			}
+		}
+	}
+
+	async onObjectChange(id, obj) {
+		this.log.debug(`object ${id} changed: ${JSON.stringify(obj)}`);
 	}
 
 	// Is called when adapter shuts down
