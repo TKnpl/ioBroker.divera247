@@ -92,6 +92,7 @@
     "extIcon": "https://raw.githubusercontent.com/TKnpl/ioBroker.divera247/master/admin/divera247.png",
     "readme": "https://github.com/TKnpl/ioBroker.divera247/blob/master/README.md",
     "loglevel": "info",
+    "tier": 2,
     "mode": "daemon",
     "type": "alarm",
     "compact": true,
