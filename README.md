@@ -77,7 +77,7 @@ To subscribe **all alarms**, just leave the input fields empty.
 ## License
 MIT License
 
-Copyright (c) 2022 TKnpl <dev@t-concepts.de>
+Copyright (c) 2022-2026 TKnpl <dev@t-concepts.de>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
