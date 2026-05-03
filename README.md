@@ -74,6 +74,8 @@ To subscribe **all alarms**, just leave the input fields empty.
 ### 0.0.1
 * (TKnpl) initial commit
 
+[Older changelogs can be found there](CHANGELOG_OLD.md)
+
 ## License
 MIT License
 
