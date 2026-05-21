@@ -29,6 +29,10 @@ To subscribe **all alarms**, just leave the input fields empty.
 
 ## Changelog
 
+
+### **WORK IN PROGRESS**
+- (ioBroker-Bot) Adapter requires js-controller >= 6.0.11 now.
+
 ### 0.2.0
 * (TKnpl) complete renewal of the adapter
 
