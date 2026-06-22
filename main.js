@@ -4,17 +4,20 @@ const utils = require('@iobroker/adapter-core');
 const axios = require('axios');
 const adapterName = require('./package.json').name.split('.').pop();
 
-const userData = [];
-userData['diveraAPIToken'] = '';
-userData['diveraMemberships'] = [];
+const userData = {
+	diveraAPIToken: '',
+	/** @type {any[]} */
+	diveraMemberships: [],
+};
 
-const internalAlarmData = [];
-internalAlarmData['alarmID'] = 0;
-internalAlarmData['alarmClosed'] = true;
-internalAlarmData['lastAlarmUpdate'] = 0;
+const internalAlarmData = {
+	alarmID: 0,
+	alarmClosed: true,
+	lastAlarmUpdate: 0,
+};
 
 
-const pollIntervallSeconds = 15;
+const pollIntervalMinimumSeconds = 10;
 
 const dataPoints = [{
 	'id': 'alarm',
@@ -138,6 +141,7 @@ class Divera247 extends utils.Adapter {
 		});
 
 		this.refreshStateTimeout = null;
+		this.pollIntervalSeconds = 30;
 
 		this.on('ready', this.onReady.bind(this));
 		this.on('unload', this.onUnload.bind(this));
@@ -147,8 +151,8 @@ class Divera247 extends utils.Adapter {
 		this.setState('info.connection', false, true);
 
 		// Generating DataPoints for this adapter
-		dataPoints.forEach( (elm) => {
-			this.setObjectNotExistsAsync(elm.id, {
+		for (const elm of dataPoints) {
+			await this.setObjectNotExistsAsync(elm.id, {
 				type: 'state',
 				common: {
 					name: elm.name,
@@ -159,7 +163,10 @@ class Divera247 extends utils.Adapter {
 				},
 				native: {},
 			});
-		});
+		}
+
+		// Initialise the states at startup so they are never null (booleans default to false), like in 0.1.2
+		await this.resetAlarmStates();
 
 		////////////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 		const diveraLoginName = this.config.diveraUserLogin;
@@ -177,8 +184,15 @@ class Divera247 extends utils.Adapter {
 		// Check if all values of diveraUserGroups are valid
 		const userGroupInputIsValid = this.uiFilterIsValid(diveraUserGroups)[0];
 
+		// Poll interval in seconds (configurable like in 0.1.2), clamped to a sane minimum
+		let pollIntervalSeconds = parseInt(String(this.config.pollInterval), 10);
+		if (isNaN(pollIntervalSeconds) || pollIntervalSeconds < pollIntervalMinimumSeconds) {
+			pollIntervalSeconds = pollIntervalMinimumSeconds;
+		}
+		this.pollIntervalSeconds = pollIntervalSeconds;
+
 		// Startup logic from here. Login and API calls
-		if (diveraLoginName && diveraLoginPassword && pollIntervallSeconds && userIDInputIsValid && userGroupInputIsValid) {
+		if (diveraLoginName && diveraLoginPassword && this.pollIntervalSeconds && userIDInputIsValid && userGroupInputIsValid) {
 			if (await this.checkConnectionToApi(diveraLoginName, diveraLoginPassword)) {
 				// Connected to API
 				this.setState('info.connection', true, true);
@@ -238,7 +252,9 @@ class Divera247 extends utils.Adapter {
 				if (response.status == 200 && responseBody.success) {
 					this.log.debug('Connected to API');
 					userData.diveraAPIToken = responseBody.data.user.access_token;
-					userData.diveraMemberships = responseBody.data.ucr;
+					// 'ucr' may be returned as an array or as an object keyed by id - normalize to an array
+					const ucr = responseBody.data.ucr;
+					userData.diveraMemberships = Array.isArray(ucr) ? ucr : Object.values(ucr || {});
 					this.log.debug('Divera Memberships: ' + JSON.stringify(userData.diveraMemberships));
 					return true;
 				} else {
@@ -273,22 +289,24 @@ class Divera247 extends utils.Adapter {
 	 * @param {string[]} diveraUserGroups
 	 */
 	async getDataFromApiAndSetObjects(diveraAccessKey, diveraFilterOnlyAlarmsForMyUser, diveraUserIDs, diveraUserGroups) {
-		// Calling the alerting-server api
+		// Calling the pull/all endpoint - it works for all Divera versions (incl. FREE) and
+		// returns alarms (data.alarm), the unit data and the monitor in a single request.
+		// The dedicated /api/v2/alarms (CRUD) endpoint is forbidden (403) for FREE accounts.
 		// @ts-ignore
 		await axios({
 			method: 'get',
 			baseURL: 'https://www.divera247.com/',
-			url: '/api/v2/alarms?accesskey=' + diveraAccessKey,
+			url: '/api/v2/pull/all?accesskey=' + diveraAccessKey,
 			responseType: 'json'
 		}).then(
-			(response) => {
+			async (response) => {
 				const content = response.data;
 
 				// If last request failed set info.connection true again
 				// @ts-ignore
 				this.getState('info.connection',  (err, state) => {
 					// @ts-ignore
-					if (!state.val) {
+					if (state && !state.val) {
 						this.setState('info.connection', true, true);
 						this.log.debug('Reconnected to API');
 					}
@@ -298,8 +316,17 @@ class Divera247 extends utils.Adapter {
 				this.setState('lastUpdate', { val: Date.now(), ack: true });
 
 				// Setting the alarm specific states when a new alarm is active and addressed to the configured divera user id
-				if (content.success && Object.keys(content.data.items).length > 0) {
-					const alarmContent = content.data.items[content.data.sorting[0]];
+				const alarmRoot = (content.data && content.data.alarm) ? content.data.alarm : null;
+				if (content.success && alarmRoot && alarmRoot.items && Array.isArray(alarmRoot.sorting) && alarmRoot.sorting.length > 0) {
+					// 'sorting' is ascending (oldest first), so the most recent alarm is the last entry
+					const latestAlarmId = alarmRoot.sorting[alarmRoot.sorting.length - 1];
+					const alarmContent = alarmRoot.items[latestAlarmId];
+					if (!alarmContent) {
+						this.log.debug('No alarm content found for latest alarm id ' + latestAlarmId);
+						return;
+					}
+					// The Divera v2 API spells the field 'ucr_adressed' (single 'd'); older v1 endpoints used 'ucr_addressed'
+					const alarmAddressedUsers = alarmContent.ucr_addressed || alarmContent.ucr_adressed || [];
 					if ((internalAlarmData.alarmID != alarmContent.id && !alarmContent.closed) || (internalAlarmData.alarmID == alarmContent.id && internalAlarmData.lastAlarmUpdate < alarmContent.ts_update && !alarmContent.closed)) {
 						this.log.debug('New or updated alarm!');
 						this.log.debug('Received data from Divera-API: ' + JSON.stringify(content));
@@ -313,7 +340,7 @@ class Divera247 extends utils.Adapter {
 						if (diveraFilterOnlyAlarmsForMyUser) {
 							for (const elm of userData.diveraMemberships) {
 								this.log.debug('checking if my user-id \'' + elm.id + '\' for \'' + elm.name + '\' is alarmed');
-								if (alarmContent.ucr_addressed.includes(parseInt(elm.id, 10))) {
+								if (alarmAddressedUsers.includes(parseInt(elm.id, 10))) {
 									this.setAdapterStates(alarmContent);
 									this.log.debug('my user is alarmed - states refreshed for the current alarm');
 									break;
@@ -324,7 +351,7 @@ class Divera247 extends utils.Adapter {
 						} else if (diveraUserIDs.length > 0 && diveraUserIDs[0] != '') {
 							for (const elm of diveraUserIDs) {
 								this.log.debug('checking if user \'' + elm + '\' is alarmed');
-								if (alarmContent.ucr_addressed.includes(parseInt(elm, 10))) {
+								if (alarmAddressedUsers.includes(parseInt(elm, 10))) {
 									this.setAdapterStates(alarmContent);
 									this.log.debug('user is alarmed - states refreshed for the current alarm');
 									break;
@@ -335,7 +362,7 @@ class Divera247 extends utils.Adapter {
 						} else if (diveraUserGroups.length > 0 && diveraUserGroups[0] != '') {
 							for (const elm of diveraUserGroups) {
 								this.log.debug('checking if group \'' + elm + '\' is alarmed');
-								if (alarmContent.group.includes(parseInt(elm, 10))) {
+								if (Array.isArray(alarmContent.group) && alarmContent.group.includes(parseInt(elm, 10))) {
 									this.setAdapterStates(alarmContent);
 									this.log.debug('group is alarmed - states refreshed for the current alarm');
 									break;
@@ -349,10 +376,20 @@ class Divera247 extends utils.Adapter {
 							this.log.debug('states refreshed for the current alarm');
 						}
 					} else if (internalAlarmData.alarmID == alarmContent.id && alarmContent.closed && !internalAlarmData.alarmClosed) {
-						this.setState('alarm', { val: !alarmContent.closed, ack: true });
-						this.log.debug('alarm is closed');
+						await this.resetAlarmStates();
+						this.log.debug('alarm is closed - alarm states reset');
 						internalAlarmData.alarmClosed = alarmContent.closed;
 					}
+				} else if (content.success) {
+					// API call succeeded but there is no active (non-archived) alarm -> clear a previously set alarm (see upstream PR #22)
+					if (internalAlarmData.alarmID !== 0) {
+						await this.resetAlarmStates();
+						this.log.debug('alarm list is empty - alarm states reset');
+						internalAlarmData.alarmID = 0;
+						internalAlarmData.alarmClosed = true;
+					}
+				} else {
+					this.log.warn('api content retrieval not successful');
 				}
 			}
 		).catch(
@@ -360,7 +397,7 @@ class Divera247 extends utils.Adapter {
 				if (error.response) {
 					// The request was made and the server responded with a error status code
 					if (error.response.status == 403) {
-						this.log.error('Login not possible');
+						this.log.error('API request forbidden (403) - the accesskey is missing the required permission for this endpoint');
 						this.setState('info.connection', false, true);
 					} else {
 						this.log.warn('received error ' + error.response.status + ' response with content: ' + JSON.stringify(error.response.data));
@@ -378,18 +415,24 @@ class Divera247 extends utils.Adapter {
 			}
 		);
 
+
 		// Timeout and self call handling
 		this.refreshStateTimeout = this.refreshStateTimeout || setTimeout(() => {
 			this.refreshStateTimeout = null;
 			this.getDataFromApiAndSetObjects(diveraAccessKey, diveraFilterOnlyAlarmsForMyUser, diveraUserIDs, diveraUserGroups);
-		}, pollIntervallSeconds * 1000);
+		}, this.pollIntervalSeconds * 1000);
 	}
 
 	// Function to set satates
 	/**
-	 * @param {{ title: string; text: string; foreign_id: number; id: number; address: string; lat: number; lng: number; date: number; priority: boolean; ucr_addressed: string[]; group: string[]; vehicle: string[]; }} alarmData
+	 * @param {{ title: string; text: string; foreign_id: number; id: number; address: string; lat: number; lng: number; date: number; priority: boolean; ucr_addressed?: number[]; ucr_adressed?: number[]; group: number[]; vehicle: string[]; }} alarmData
 	 */
 	setAdapterStates(alarmData) {
+		// The Divera v2 API spells the field 'ucr_adressed' (single 'd'); older v1 endpoints used 'ucr_addressed'
+		const addressedUsers = alarmData.ucr_addressed || alarmData.ucr_adressed || [];
+		const addressedGroups = Array.isArray(alarmData.group) ? alarmData.group : [];
+		const addressedVehicles = Array.isArray(alarmData.vehicle) ? alarmData.vehicle : [];
+
 		this.setState('title', { val: alarmData.title, ack: true });
 		this.setState('text', { val: alarmData.text, ack: true });
 		this.setState('foreign_id', { val: Number(alarmData.foreign_id), ack: true });
@@ -399,10 +442,23 @@ class Divera247 extends utils.Adapter {
 		this.setState('lng', { val: Number(alarmData.lng), ack: true });
 		this.setState('date', { val: Number(alarmData.date)*1000, ack: true });
 		this.setState('priority', { val: alarmData.priority, ack: true });
-		this.setState('addressed_users', { val: alarmData.ucr_addressed.join(), ack: true });
-		this.setState('addressed_groups', { val: alarmData.group.join(), ack: true });
-		this.setState('addressed_vehicle', { val: alarmData.vehicle.join(), ack: true });
+		this.setState('addressed_users', { val: addressedUsers.join(), ack: true });
+		this.setState('addressed_groups', { val: addressedGroups.join(), ack: true });
+		this.setState('addressed_vehicle', { val: addressedVehicles.join(), ack: true });
 		this.setState('alarm', { val: true, ack: true });
+	}
+
+	/**
+	 *	Reset all alarm related states to their defaults (booleans to false, the rest to null).
+	 *	Called at startup and whenever there is no active alarm anymore. lastUpdate is kept.
+	 */
+	async resetAlarmStates() {
+		for (const elm of dataPoints) {
+			if (elm.id === 'lastUpdate') {
+				continue;
+			}
+			await this.setState(elm.id, { val: (elm.type === 'boolean') ? false : null, ack: true });
+		}
 	}
 
 	// Is called when adapter shuts down

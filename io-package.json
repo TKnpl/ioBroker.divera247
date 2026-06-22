@@ -1,8 +1,12 @@
 {
   "common": {
     "name": "divera247",
-    "version": "0.2.0",
+    "version": "0.2.1",
     "news": {
+      "0.2.1": {
+        "en": "Fixes that make 0.2.0 work again: corrected login config, alarms read via /api/v2/pull/all (fixes 403 on FREE accounts), API field 'ucr_adressed', latest-alarm selection, startup state initialisation and a configurable poll interval",
+        "de": "Korrekturen, die 0.2.0 wieder funktionsfähig machen: Login-Konfiguration repariert, Alarme über /api/v2/pull/all (behebt 403 bei FREE-Konten), API-Feld 'ucr_adressed', Auswahl des aktuellsten Alarms, Start-Initialisierung der States und konfigurierbares Abfrageintervall"
+      },
       "0.2.0": {
         "en": "Complete renewal of the adapter",
         "de": "Generelle Erneuerung des Adapters"
@@ -100,16 +104,24 @@
     "materialize": true,
     "dependencies": [
       {
-        "js-controller": ">=2.0.0"
+        "js-controller": ">=3.0.0"
       }
     ]
   },
   "native": {
-    "diveraAccessKey": "",
+    "diveraUserLogin": "",
+    "diveraLoginPassword": "",
+    "explizitUserAlarms": false,
     "diveraUserId": "",
     "diveraAlarmGroup": "",
-    "pollIntervall": 30
+    "pollInterval": 30
   },
+  "encryptedNative": [
+    "diveraLoginPassword"
+  ],
+  "protectedNative": [
+    "diveraLoginPassword"
+  ],
   "objects": [],
   "instanceObjects": [
     {

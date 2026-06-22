@@ -121,5 +121,9 @@ systemDictionary = {
 		"es": "Alarma solo para los siguientes grupos de alarmas de Divera",
 		"pl": "Alarm tylko dla następujących grup alarmowych Divera",
 		"zh-cn": "仅针对以下Divera警报组发出警报"
+	},
+	"Poll interval (seconds)": {
+		"en": "Poll interval (seconds)",
+		"de": "Abfrageintervall (Sekunden)"
 	}
 };
